@@ -1,6 +1,13 @@
+from typing import List
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from sqlmodel import Session
+from starlette import status
 
+from app.db.database import create_db_and_tables, engine
+from app.db.user_repository import UserRepository
+from app.user import UserRead
 
 origins = [
     "http://localhost:3000",
@@ -17,9 +24,15 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+create_db_and_tables()
+
 
 @app.get("/")
 async def root():
     return "Pong!"
 
 
+@app.get("/users", status_code=status.HTTP_200_OK)
+async def get_users() -> List[UserRead]:
+    with Session(engine) as session:
+        return UserRepository(session).get_all()
