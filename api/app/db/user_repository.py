@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 
 from sqlmodel import select, Session
 
@@ -17,8 +17,14 @@ class UserRepository:
         return list(map(lambda user: user.to_read_model(), raw_users))
 
     def create(self, user: UserCreate) -> UserRead:
-        user = User.from_create_model(user)
+        user = User.from_create_model(user, self)
         self.session.add(user)
         self.session.commit()
 
         return user.to_read_model()
+
+    def get_by_email(self, email: str) -> Optional[UserRead]:
+        statement = select(User).where(User.email == email)
+        user = self.session.exec(statement).first()
+        if user:
+            return user.to_read_model()
