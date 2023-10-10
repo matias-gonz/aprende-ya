@@ -7,7 +7,7 @@ from starlette import status
 
 from app.db.database import create_db_and_tables, engine
 from app.db.user_repository import UserRepository
-from app.user import UserRead
+from app.user import UserRead, UserCreate
 
 origins = [
     "http://localhost:3000",
@@ -36,3 +36,9 @@ async def root():
 async def get_users() -> List[UserRead]:
     with Session(engine) as session:
         return UserRepository(session).get_all()
+
+
+@app.post("/users", status_code=status.HTTP_201_CREATED)
+async def create_post(user: UserCreate) -> UserRead:
+    with Session(engine) as session:
+        return UserRepository(session).create(user)
