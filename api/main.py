@@ -1,6 +1,14 @@
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
+from typing import List
 
+from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+from sqlmodel import Session
+from starlette import status
+
+from app.db.database import create_db_and_tables, engine
+from app.db.exceptions import EmailTakenException
+from app.db.user_repository import UserRepository
+from app.user import UserRead, UserCreate
 
 origins = [
     "http://localhost:3000",
@@ -17,9 +25,27 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+create_db_and_tables()
+
 
 @app.get("/")
 async def root():
     return "Pong!"
 
 
+@app.get("/users", status_code=status.HTTP_200_OK)
+async def get_users() -> List[UserRead]:
+    with Session(engine) as session:
+        return UserRepository(session).get_all()
+
+
+@app.post("/users", status_code=status.HTTP_201_CREATED)
+async def create_user(user: UserCreate) -> UserRead:
+    try:
+        with Session(engine) as session:
+            return UserRepository(session).create(user)
+    except EmailTakenException as e:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail=e.message,
+        )
