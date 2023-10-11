@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 pragma solidity ^0.8.0;
 
 contract Certificates {
@@ -27,7 +29,7 @@ contract Certificates {
 
     function getCertificate(uint _id) public view returns (string memory, string memory, string memory, string memory) {
         require(_id > 0 && _id <= certificateCount, "Invalid certificate id");
-        Certificate c = certificates[_id];
+        Certificate storage c = certificates[_id];
         return (c.course, c.userName, c.date, c.userId);
     }
 }
