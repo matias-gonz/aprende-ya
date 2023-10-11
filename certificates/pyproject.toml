@@ -8,6 +8,8 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.10"
 py-solc-x = "^1.1.1"
+web3 = "^6.10.0"
+python-dotenv = "^1.0.0"
 
 
 [build-system]
