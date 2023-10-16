@@ -58,6 +58,8 @@ function CourseForm({ onAddCourse }) {
                     />
                     <TextField
                         fullWidth
+                        multiline
+                        rows={5}
                         label="Descripción"
                         name="description"
                         value={courseData.description}
@@ -67,6 +69,8 @@ function CourseForm({ onAddCourse }) {
                     <TextField
                         fullWidth
                         label="Contenido"
+                        multiline
+                        rows={5}
                         name="content"
                         value={courseData.content}
                         onChange={handleInputChange}

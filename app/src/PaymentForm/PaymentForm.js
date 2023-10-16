@@ -27,7 +27,7 @@ function PaymentForm() {
                         variant="outlined"
                         value={cardNumber}
                         onChange={(e) => setCardNumber(e.target.value)}
-                        style={{ marginBottom: '10px', marginTop: '10px' }}
+                        style={{ marginBottom: '10px', marginTop: '20px' }}
                     />
                     <TextField
                         label="Fecha de Vencimiento"

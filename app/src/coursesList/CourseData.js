@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import { Grid, Card, CardContent, Typography, CardActions, Button } from '@mui/material';
+import {Grid, Card, CardContent, Typography, CardActions, Button, CardMedia} from '@mui/material';
 
 import CourseModal from "../CourseModal/CourseModal";
 import Header from "../header/Header";
@@ -13,6 +13,7 @@ function CourseList({ courses }) {
             content: 'Lecciones en video, ejercicios y proyectos prácticos.',
             category: 'Desarrollo Web',
             averageRating: 2,
+            image: 'https://vilmanunez.com/wp-content/uploads/2016/03/herramientas-y-recursos-para-crear-curso-online.png', // URL de la imagen del curso
         },
         {
             id: 2,
@@ -21,6 +22,7 @@ function CourseList({ courses }) {
             content: 'Diseño de logotipos, ilustraciones y manipulación de imágenes.',
             category: 'Diseño Gráfico',
             averageRating: 2,
+            image: 'https://vilmanunez.com/wp-content/uploads/2016/03/herramientas-y-recursos-para-crear-curso-online.png', // URL de la imagen del curso
         },
         {
             id: 3,
@@ -29,6 +31,7 @@ function CourseList({ courses }) {
             content: 'Publicidad en redes sociales, SEO y analítica web.',
             category: 'Marketing',
             averageRating: 2,
+            image: 'https://vilmanunez.com/wp-content/uploads/2016/03/herramientas-y-recursos-para-crear-curso-online.png', // URL de la imagen del curso
         },
         {
             id: 4,
@@ -37,6 +40,7 @@ function CourseList({ courses }) {
             content: 'Técnicas de fotografía, edición de imágenes y composición.',
             category: 'Fotografía',
             averageRating: 2,
+            image: 'https://vilmanunez.com/wp-content/uploads/2016/03/herramientas-y-recursos-para-crear-curso-online.png', // URL de la imagen del curso
         },
     ];
 
@@ -57,8 +61,13 @@ function CourseList({ courses }) {
             <Header/>
             <Grid container spacing={2}>
                 {courses.map((course) => (
-                    <Grid item xs={12} sm={6} key={course.id}>
+                    <Grid item xs={12} sm={6} key={course.id} marginTop={'10px'}>
                         <Card>
+                            <CardMedia
+                                component="img"
+                                height="200"
+                                image={course.image}
+                            />
                             <CardContent>
                                 <Typography variant="h6" component="div">
                                     {course.title}
