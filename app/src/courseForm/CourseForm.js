@@ -7,6 +7,7 @@ import {
     Box,
 } from '@mui/material';
 import {Link} from "react-router-dom";
+import Header from "../header/Header";
 
 const formStyle = {
     display: 'flex',
@@ -30,8 +31,7 @@ function CourseForm({ onAddCourse }) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        onAddCourse(courseData); // Enviar datos del curso al componente principal
-        // Reiniciar el formulario o realizar cualquier otra acción necesaria
+        onAddCourse(courseData);
         setCourseData({
             title: '',
             description: '',
@@ -41,48 +41,51 @@ function CourseForm({ onAddCourse }) {
     };
 
     return (
-        <Container maxWidth="sm">
-            <Typography variant="h5" component="div" >
-                Agregar Nuevo Curso
-            </Typography>
-            <form onSubmit={handleSubmit} style={formStyle}>
-                <TextField
-                    fullWidth
-                    label="Título del Curso"
-                    name="title"
-                    value={courseData.title}
-                    onChange={handleInputChange}
-                    style={{ marginBottom: '16px' }}
-                />
-                <TextField
-                    fullWidth
-                    label="Descripción"
-                    name="description"
-                    value={courseData.description}
-                    onChange={handleInputChange}
-                    style={{ marginBottom: '16px' }}
-                />
-                <TextField
-                    fullWidth
-                    label="Contenido"
-                    name="content"
-                    value={courseData.content}
-                    onChange={handleInputChange}
-                    style={{ marginBottom: '16px' }}
-                />
-                <TextField
-                    fullWidth
-                    label="Categoría"
-                    name="category"
-                    value={courseData.category}
-                    onChange={handleInputChange}
-                    style={{ marginBottom: '16px' }}
-                />
-                <Button type="submit" variant="contained" color="primary" component={Link} to="/cursos">
-                    Agregar Curso
-                </Button>
-            </form>
-        </Container>
+        <div>
+            <Header/>
+            <Container maxWidth="sm">
+                <Typography variant="h5" component="div" padding={2} display="flex" alignItems="center" justifyContent="center">
+                    Agregar Nuevo Curso
+                </Typography>
+                <form onSubmit={handleSubmit} style={formStyle}>
+                    <TextField
+                        fullWidth
+                        label="Título del Curso"
+                        name="title"
+                        value={courseData.title}
+                        onChange={handleInputChange}
+                        style={{ marginBottom: '16px' }}
+                    />
+                    <TextField
+                        fullWidth
+                        label="Descripción"
+                        name="description"
+                        value={courseData.description}
+                        onChange={handleInputChange}
+                        style={{ marginBottom: '16px' }}
+                    />
+                    <TextField
+                        fullWidth
+                        label="Contenido"
+                        name="content"
+                        value={courseData.content}
+                        onChange={handleInputChange}
+                        style={{ marginBottom: '16px' }}
+                    />
+                    <TextField
+                        fullWidth
+                        label="Categoría"
+                        name="category"
+                        value={courseData.category}
+                        onChange={handleInputChange}
+                        style={{ marginBottom: '16px' }}
+                    />
+                    <Button type="submit" variant="contained" color="primary" component={Link} to="/cursos">
+                        Agregar Curso
+                    </Button>
+                </form>
+            </Container>
+        </div>
     );
 }
 
