@@ -5,8 +5,10 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlmodel import Session
 from starlette import status
 
+from api.app.course import CourseCreate, CourseRead
+from app.db.course_repository import CourseRepository
 from app.db.database import create_db_and_tables, engine
-from app.db.exceptions import EmailTakenException
+from app.db.exceptions import EmailTakenException, CourseNameTakenException
 from app.db.user_repository import UserRepository
 from app.user import UserRead, UserCreate
 
@@ -45,6 +47,24 @@ async def create_user(user: UserCreate) -> UserRead:
         with Session(engine) as session:
             return UserRepository(session).create(user)
     except EmailTakenException as e:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail=e.message,
+        )
+
+
+@app.get("/courses", status_code=status.HTTP_200_OK)
+async def get_courses() -> List[CourseRead]:
+    with Session(engine) as session:
+        return CourseRepository(session).get_all()
+
+
+@app.post("/courses", status_code=status.HTTP_201_CREATED)
+async def create_course(course: CourseCreate) -> CourseRead:
+    try:
+        with Session(engine) as session:
+            return CourseRepository(session).create(course)
+    except CourseNameTakenException as e:
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
             detail=e.message,
