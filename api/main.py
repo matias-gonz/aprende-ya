@@ -41,7 +41,7 @@ async def get_users() -> List[UserRead]:
         return UserRepository(session).get_all()
 
 
-@app.post("/users", status_code=status.HTTP_201_CREATED)
+@app.post("/user", status_code=status.HTTP_201_CREATED)
 async def create_user(user: UserCreate) -> UserRead:
     try:
         with Session(engine) as session:
@@ -59,7 +59,7 @@ async def get_courses() -> List[CourseRead]:
         return CourseRepository(session).get_all()
 
 
-@app.post("/courses", status_code=status.HTTP_201_CREATED)
+@app.post("/course", status_code=status.HTTP_201_CREATED)
 async def create_course(course: CourseCreate) -> CourseRead:
     try:
         with Session(engine) as session:
