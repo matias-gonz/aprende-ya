@@ -15,6 +15,11 @@ class User(SQLModel, table=True):
     email: str
     password_hash: str
 
+    def login(self, password):
+        if not bcrypt.checkpw(password, self.password_hash):
+            raise WrongCredentialsException()
+
+
     def to_read_model(self) -> UserRead:
         return UserRead(id=self.id, email=self.email)
 
