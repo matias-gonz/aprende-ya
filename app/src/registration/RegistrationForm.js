@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Container, TextField, Button, Grid, Typography } from '@mui/material';
 import { AccountCircle, Email, Lock } from '@mui/icons-material';
+import axios from "axios";
+import Cookies from 'js-cookie';
 
 function RegistrationForm() {
     const [formData, setFormData] = useState({
@@ -20,12 +22,13 @@ function RegistrationForm() {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        const apiUrl = 'localhost:8000';
+        const apiUrl = 'localhost:8000/users';
 
         axios
             .post(apiUrl, formData)
             .then((response) => {
                 console.log('Registration:', response.data);
+                Cookies.set('user_id', response.data['user_id'], { expires: 1 });
             })
             .catch((error) => {
                 console.error('Error al intentar iniciar sesión:', error);

@@ -8,6 +8,8 @@ import {
 } from '@mui/material';
 import {Link} from "react-router-dom";
 import Header from "../header/Header";
+import axios from "axios";
+import Cookies from "js-cookie";
 
 const formStyle = {
     display: 'flex',
@@ -32,12 +34,18 @@ function CourseForm({ onAddCourse }) {
     const handleSubmit = (e) => {
         e.preventDefault();
         onAddCourse(courseData);
-        setCourseData({
-            title: '',
-            description: '',
-            content: '',
-            category: '',
-        });
+
+        const apiUrl = 'localhost:8000/' + Cookies.get('user_id') + '/course';
+
+        axios
+            .post(apiUrl, courseData)
+            .then((response) => {
+                console.log('Create course:', response.data);
+                Cookies.set('user_id', response.data['user_id'], { expires: 1 });
+            })
+            .catch((error) => {
+                console.error('Error trying to create a new course:', error);
+            });
     };
 
     return (
