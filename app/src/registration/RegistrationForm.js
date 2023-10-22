@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import { Container, TextField, Button, Grid, Typography } from '@mui/material';
-import { AccountCircle, Email, Lock } from '@mui/icons-material';
+import { Email, Lock } from '@mui/icons-material';
 import axios from "axios";
 import Cookies from 'js-cookie';
+import { useNavigate } from 'react-router-dom';
 
 function RegistrationForm() {
+    const navigate = useNavigate();
+
     const [formData, setFormData] = useState({
         email: '',
         password: '',
@@ -21,18 +24,27 @@ function RegistrationForm() {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        const apiUrl = 'localhost:8000/user';
+        const apiUrl = 'http://127.0.0.1:8000/user';
+
+        console.log("Posting data", formData)
+
+        //TODO: Loading modal set true
 
         axios
             .post(apiUrl, formData)
             .then((response) => {
                 console.log('Registration:', response.data);
                 Cookies.set('id', response.data['id'], { expires: 1 });
+                //TODO: Loading modal set false
+                navigate('/');
             })
             .catch((error) => {
-                console.error('Error al intentar iniciar sesión:', error);
+                console.error('Error trying to register:', error);
+                //TODO: Loading modal set false
+                //TODO: Error modal
             });
     };
+
 
     return (
         <Container maxWidth="sm">
