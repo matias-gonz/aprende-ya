@@ -7,7 +7,7 @@ from sqlmodel import SQLModel, Field
 from app.db.exceptions import EmailTakenException, CourseNameTakenException
 from app.user import UserRead, UserCreate
 
-from api.app.course import CourseRead, CourseCreate
+from app.course import CourseRead, CourseCreate
 
 
 class User(SQLModel, table=True):

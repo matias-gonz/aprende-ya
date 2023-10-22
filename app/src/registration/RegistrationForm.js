@@ -21,7 +21,9 @@ function RegistrationForm() {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        const apiUrl = 'localhost:8000/user';
+        const apiUrl = 'http://127.0.0.1:8000/user';
+
+        console.log("Posting data", formData)
 
         axios
             .post(apiUrl, formData)
@@ -30,7 +32,7 @@ function RegistrationForm() {
                 Cookies.set('id', response.data['id'], { expires: 1 });
             })
             .catch((error) => {
-                console.error('Error al intentar iniciar sesión:', error);
+                console.error('Error trying to register:', error);
             });
     };
 

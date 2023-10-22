@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlmodel import Session
 from starlette import status
 
-from api.app.course import CourseCreate, CourseRead
+from app.course import CourseCreate, CourseRead
 from app.db.course_repository import CourseRepository
 from app.db.database import create_db_and_tables, engine
 from app.db.exceptions import EmailTakenException, CourseNameTakenException
