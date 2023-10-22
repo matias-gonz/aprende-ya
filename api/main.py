@@ -40,6 +40,7 @@ async def get_users() -> List[UserRead]:
     with Session(engine) as session:
         return UserRepository(session).get_all()
 
+
 @app.get("/user", status_code=status.HTTP_200_OK)
 async def login(email: str, password: str) -> UserRead:
     try:

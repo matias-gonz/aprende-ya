@@ -9,10 +9,11 @@ import { AccountCircle, Lock } from '@mui/icons-material';
 // Importa el archivo CSS
 import './LoginForm.css';
 import {Grid, Typography} from "@mui/material";
+import Cookies from "js-cookie";
 
 class LoginForm extends Component {
     state = {
-        username: '',
+        email: '',
         password: '',
     };
 
@@ -24,20 +25,21 @@ class LoginForm extends Component {
     handleLogin = (e) => {
         e.preventDefault();
 
-        const data = {
-            username: this.state.username,
+        const apiUrl = 'http://127.0.0.1:8000/user';
+
+        const queryParams = {
+            email: this.state.email,
             password: this.state.password,
         };
 
-        const apiUrl = 'URL_API'; // Reemplaza esto con la URL de tu API
-
         axios
-            .post(apiUrl, data)
+            .get(apiUrl, { params: queryParams })
             .then((response) => {
                 console.log('Login:', response.data);
+                Cookies.set('id', response.data['id'], { expires: 1 });
             })
             .catch((error) => {
-                console.error('Error al intentar iniciar sesión:', error);
+                console.error('Error trying to login:', error);
             });
     };
 
@@ -52,9 +54,9 @@ class LoginForm extends Component {
                         <Grid item xs={12}>
                             <TextField
                                 fullWidth
-                                label="Nombre de usuario"
-                                name="username"
-                                value={this.state.username}
+                                label="Email"
+                                name="email"
+                                value={this.state.email}
                                 onChange={this.handleInputChange}
                                 InputProps={{
                                     startAdornment: <AccountCircle />,

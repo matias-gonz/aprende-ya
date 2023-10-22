@@ -16,7 +16,7 @@ class User(SQLModel, table=True):
     password_hash: str
 
     def login(self, password):
-        if not bcrypt.checkpw(password, self.password_hash):
+        if not bcrypt.checkpw(password.encode("utf8"), self.password_hash):
             raise WrongCredentialsException()
 
 
@@ -28,7 +28,7 @@ class User(SQLModel, table=True):
         if user_repository.get_by_email(user.email):
             raise EmailTakenException()
 
-        password_hash = bcrypt.hashpw(user.password.encode("utf-8"), bcrypt.gensalt())
+        password_hash = bcrypt.hashpw(user.password.encode("utf8"), bcrypt.gensalt())
         return User(email=user.email, password_hash=password_hash)
 
 
