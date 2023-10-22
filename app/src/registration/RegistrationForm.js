@@ -6,7 +6,6 @@ import Cookies from 'js-cookie';
 
 function RegistrationForm() {
     const [formData, setFormData] = useState({
-        username: '',
         email: '',
         password: '',
     });
@@ -22,7 +21,7 @@ function RegistrationForm() {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        const apiUrl = 'localhost:8000/users';
+        const apiUrl = 'localhost:8000/user';
 
         axios
             .post(apiUrl, formData)
@@ -41,18 +40,6 @@ function RegistrationForm() {
                 <Grid container spacing={2}>
                     <Grid item xs={12}>
                         <Typography variant="h5">Registro</Typography>
-                    </Grid>
-                    <Grid item xs={12}>
-                        <TextField
-                            fullWidth
-                            label="Nombre de usuario"
-                            name="username"
-                            value={formData.username}
-                            onChange={handleInputChange}
-                            InputProps={{
-                                startAdornment: <AccountCircle />,
-                            }}
-                        />
                     </Grid>
                     <Grid item xs={12}>
                         <TextField
