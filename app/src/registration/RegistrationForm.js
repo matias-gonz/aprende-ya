@@ -19,8 +19,17 @@ function RegistrationForm() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const { username, email, password } = formData;
-        //registerUser(username, email, password);
+
+        const apiUrl = 'localhost:8000';
+
+        axios
+            .post(apiUrl, formData)
+            .then((response) => {
+                console.log('Registration:', response.data);
+            })
+            .catch((error) => {
+                console.error('Error al intentar iniciar sesión:', error);
+            });
     };
 
     return (
