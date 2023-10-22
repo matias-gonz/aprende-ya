@@ -28,7 +28,7 @@ function RegistrationForm() {
             .post(apiUrl, formData)
             .then((response) => {
                 console.log('Registration:', response.data);
-                Cookies.set('user_id', response.data['user_id'], { expires: 1 });
+                Cookies.set('id', response.data['id'], { expires: 1 });
             })
             .catch((error) => {
                 console.error('Error al intentar iniciar sesión:', error);

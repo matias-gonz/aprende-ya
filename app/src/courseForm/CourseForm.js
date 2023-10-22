@@ -35,13 +35,13 @@ function CourseForm({ onAddCourse }) {
         e.preventDefault();
         onAddCourse(courseData);
 
-        const apiUrl = 'localhost:8000/' + Cookies.get('user_id') + '/course';
+        const apiUrl = 'localhost:8000/' + Cookies.get('id') + '/course';
 
         axios
             .post(apiUrl, courseData)
             .then((response) => {
                 console.log('Create course:', response.data);
-                Cookies.set('user_id', response.data['user_id'], { expires: 1 });
+                Cookies.set('id', response.data['id'], { expires: 1 });
             })
             .catch((error) => {
                 console.error('Error trying to create a new course:', error);
