@@ -1,4 +1,6 @@
 from uuid import uuid4
+
+import bcrypt
 from typing import Optional
 from sqlmodel import SQLModel, Field
 
