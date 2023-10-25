@@ -4,7 +4,7 @@ import bcrypt
 from typing import Optional
 from sqlmodel import SQLModel, Field
 
-from app.db.exceptions import EmailTakenException, CourseNameTakenException
+from app.db.exceptions import EmailTakenException, CourseNameTakenException, WrongCredentialsException
 from app.user import UserRead, UserCreate
 
 from app.course import CourseRead, CourseCreate
@@ -13,7 +13,12 @@ from app.course import CourseRead, CourseCreate
 class User(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     email: str
-    password_hash: str
+    password: str
+
+    def login(self, password):
+        if password != self.password:
+            raise WrongCredentialsException()
+
 
     def to_read_model(self) -> UserRead:
         return UserRead(id=self.id, email=self.email)
@@ -23,8 +28,7 @@ class User(SQLModel, table=True):
         if user_repository.get_by_email(user.email):
             raise EmailTakenException()
 
-        password_hash = bcrypt.hashpw(user.password.encode("utf-8"), bcrypt.gensalt())
-        return User(email=user.email, password_hash=password_hash)
+        return User(email=user.email, password=user.password)
 
 
 class Course(SQLModel, table=True):

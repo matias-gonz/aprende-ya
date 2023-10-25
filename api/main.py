@@ -40,6 +40,17 @@ async def get_users() -> List[UserRead]:
     with Session(engine) as session:
         return UserRepository(session).get_all()
 
+@app.get("/user", status_code=status.HTTP_200_OK)
+async def login(email: str, password: str) -> UserRead:
+    try:
+        with Session(engine) as session:
+            return UserRepository(session).login(email, password)
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail=e.message,
+        )
+
 
 @app.post("/user", status_code=status.HTTP_201_CREATED)
 async def create_user(user: UserCreate) -> UserRead:

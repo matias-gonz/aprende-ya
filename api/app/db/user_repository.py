@@ -28,3 +28,10 @@ class UserRepository:
         user = self.session.exec(statement).first()
         if user:
             return user.to_read_model()
+
+    def login(self, email: str, password: str) -> Optional[UserRead]:
+        statement = select(User).where(User.email == email)
+        user = self.session.exec(statement).first()
+        if user:
+            user.login(password)
+            return user.to_read_model()
