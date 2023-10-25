@@ -36,7 +36,7 @@ function RegistrationForm() {
                 console.log('Registration:', response.data);
                 Cookies.set('id', response.data['id'], { expires: 1 });
                 //TODO: Loading modal set false
-                navigate('/');
+                navigate('/login');
             })
             .catch((error) => {
                 console.error('Error trying to register:', error);

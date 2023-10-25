@@ -15,10 +15,10 @@ function Header() {
                 </Container>
                 <Container maxWidth="lg">
                     <Box display="flex" justifyContent="right" alignItems="center">
-                        <Button color="inherit" component={Link} to="/cursos">
+                        <Button color="inherit" component={Link} to="/">
                             Cursos
                         </Button>
-                        <Button color="inherit" component={Link} to="/">
+                        <Button color="inherit" component={Link} to="/login">
                             Mi Perfil
                         </Button>
                         <Button color="inherit" component={Link} to="/nuevo-curso">

@@ -10,11 +10,11 @@ import PaymentForm from "./PaymentForm/PaymentForm";
 function App() {
   return (
     <Routes>
+      <Route path="/" element={<CourseData/>} />
       <Route path="/pago" element={<PaymentForm/>} />
       <Route path="/nuevo-curso" element={<CourseForm/>} />
-      <Route path="/cursos" element={<CourseData/>} />
       <Route path="/registro" element={<RegistrationForm/>} />
-      <Route path="/" element={<LoginForm/>} />
+      <Route path="/login" element={<LoginForm/>} />
     </Routes>
   );
 }
