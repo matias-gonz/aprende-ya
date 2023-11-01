@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {Grid, Card, CardContent, Typography, CardActions, Button, CardMedia, CircularProgress} from '@mui/material';
 
-import CourseModal from "../CourseModal/CourseModal";
+import CourseModal from "../courseModal/CourseModal";
 import Header from "../header/Header";
 import axios from "axios";
 

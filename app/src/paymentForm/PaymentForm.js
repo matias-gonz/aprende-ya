@@ -12,6 +12,16 @@ function PaymentForm() {
     const [cardHolder, setCardHolder] = useState('');
     const [loading, setLoading] = useState(false)
 
+
+    const handleSubmit = () => {
+        setLoading(true)
+
+        setTimeout(() => {
+            // This code will be executed after the specified delay (in milliseconds)
+            setLoading(false);
+        }, 3000);
+    }
+
     return (
         <Container maxWidth="sm">
             <Paper elevation={3} style={{ padding: '20px' }}>

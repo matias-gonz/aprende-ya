@@ -8,6 +8,7 @@ RUN npm ci
 
 COPY src src
 COPY public public
+RUN npm run build
 
 ENV NODE_ENV production
 EXPOSE 3000
