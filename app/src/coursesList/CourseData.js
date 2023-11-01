@@ -17,7 +17,7 @@ function CourseList() {
         axios
             .get(apiUrl, { withCredentials: true })
             .then((response) => {
-                console.log('Create course:', response.data);
+                console.log('Get course:', response.data);
                 setCourses(response.data)
             })
             .catch((error) => {
