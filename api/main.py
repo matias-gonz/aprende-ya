@@ -1,6 +1,6 @@
-from typing import List
+from typing import List, Annotated
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Cookie
 from fastapi.middleware.cors import CORSMiddleware
 from sqlmodel import Session
 from starlette import status
@@ -40,6 +40,7 @@ async def get_users() -> List[UserRead]:
     with Session(engine) as session:
         return UserRepository(session).get_all()
 
+
 @app.get("/user", status_code=status.HTTP_200_OK)
 async def login(email: str, password: str) -> UserRead:
     try:
@@ -71,10 +72,10 @@ async def get_courses() -> List[CourseRead]:
 
 
 @app.post("/course", status_code=status.HTTP_201_CREATED)
-async def create_course(course: CourseCreate) -> CourseRead:
+async def create_course(course: CourseCreate, user_id: Annotated[str | None, Cookie()] = None) -> CourseRead:
     try:
         with Session(engine) as session:
-            return CourseRepository(session).create(course)
+            return CourseRepository(session).create(course, int(user_id))
     except CourseNameTakenException as e:
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,

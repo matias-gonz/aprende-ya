@@ -7,6 +7,7 @@ import axios from 'axios';
 import {AccountCircle, Lock} from '@mui/icons-material';
 import './LoginForm.css';
 import {Grid, Typography} from "@mui/material";
+import Cookies from 'js-cookie';
 
 
 function LoginForm() {
@@ -35,11 +36,11 @@ function LoginForm() {
 
     const apiUrl = 'http://127.0.0.1:8000/user';
 
-
     axios
       .get(apiUrl, {params: data})
       .then((response) => {
         console.log('Login:', response.data);
+        Cookies.set('user_id', response.data['id'], {expires: 1});
         navigate('/');
       })
       .catch((error) => {

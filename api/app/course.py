@@ -14,3 +14,4 @@ class CourseCreate(CourseBase):
 
 class CourseRead(CourseBase):
     id: int = Field(description="Course ID")
+    owner_id: str = Field(description="Owner id")

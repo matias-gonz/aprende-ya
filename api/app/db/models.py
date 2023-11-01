@@ -1,10 +1,7 @@
-from uuid import uuid4
-
-import bcrypt
 from typing import Optional
 from sqlmodel import SQLModel, Field
 
-from app.db.exceptions import EmailTakenException, CourseNameTakenException, WrongCredentialsException
+from app.db.exceptions import EmailTakenException, WrongCredentialsException
 from app.user import UserRead, UserCreate
 
 from app.course import CourseRead, CourseCreate
@@ -18,7 +15,6 @@ class User(SQLModel, table=True):
     def login(self, password):
         if password != self.password:
             raise WrongCredentialsException()
-
 
     def to_read_model(self) -> UserRead:
         return UserRead(id=self.id, email=self.email)
@@ -37,13 +33,20 @@ class Course(SQLModel, table=True):
     description: str
     category: str
     content: str
+    owner_id: int
 
     def to_read_model(self) -> CourseRead:
-        return CourseRead(id=self.id, title=self.title, description=self.description, category=self.category, content=self.content)
+        return CourseRead(id=self.id,
+                          title=self.title,
+                          description=self.description,
+                          category=self.category,
+                          content=self.content,
+                          owner_id=self.owner_id)
 
     @classmethod
-    def from_create_model(cls, course: CourseCreate, course_repository):
-        if course_repository.get_by_name(course.name):
-            raise CourseNameTakenException()
-
-        return Course(id=uuid4(), title=course.title , description=course.description, category=course.category, content=course.content)
+    def from_create_model(cls, course: CourseCreate, user_id: int):
+        return Course(title=course.title,
+                      description=course.description,
+                      category=course.category,
+                      content=course.content,
+                      owner_id=user_id)
