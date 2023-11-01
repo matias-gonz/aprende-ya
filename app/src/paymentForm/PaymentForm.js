@@ -12,7 +12,6 @@ function PaymentForm() {
     const [expiryDate, setExpiryDate] = useState('');
     const [cvv, setCVV] = useState('');
     const [cardHolder, setCardHolder] = useState('');
-    const [loading, setLoading] = useState(false)
 
     const [paymentSuccess, setPaymentSuccess] = useState(false);
     const [paymentError, setPaymentError] = useState(false);
@@ -61,6 +60,13 @@ function PaymentForm() {
                                 name={cardHolder}
                                 expiry={expiryDate}
                                 cvc={cvv}
+                                placeholders={{
+                                    name: 'Nombre completo',
+                                    number: 'Número de tarjeta',
+                                    expiry: 'MM/YY',
+                                    cvc: 'CVC',
+                                }}
+                                locale={{ valid: '' }}
                                 focused="" // Puedes cambiar el enfoque según el campo que desees
                             />
                         </Paper>
