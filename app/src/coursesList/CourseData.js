@@ -4,48 +4,25 @@ import {Grid, Card, CardContent, Typography, CardActions, Button, CardMedia} fro
 import CourseModal from "../courseModal/CourseModal";
 import Header from "../header/Header";
 
-function CourseList({ courses }) {
-    courses = [
-        {
-            id: 1,
-            title: 'Curso de Programación en JavaScript',
-            description: 'Aprende a programar en JavaScript desde cero.',
-            content: 'Lecciones en video, ejercicios y proyectos prácticos.',
-            category: 'Desarrollo Web',
-            averageRating: 2,
-            image: 'https://vilmanunez.com/wp-content/uploads/2016/03/herramientas-y-recursos-para-crear-curso-online.png', // URL de la imagen del curso
-        },
-        {
-            id: 2,
-            title: 'Curso de Diseño Gráfico Avanzado',
-            description: 'Mejora tus habilidades de diseño gráfico.',
-            content: 'Diseño de logotipos, ilustraciones y manipulación de imágenes.',
-            category: 'Diseño Gráfico',
-            averageRating: 2,
-            image: 'https://vilmanunez.com/wp-content/uploads/2016/03/herramientas-y-recursos-para-crear-curso-online.png', // URL de la imagen del curso
-        },
-        {
-            id: 3,
-            title: 'Curso de Marketing Digital',
-            description: 'Domina las estrategias de marketing en línea.',
-            content: 'Publicidad en redes sociales, SEO y analítica web.',
-            category: 'Marketing',
-            averageRating: 2,
-            image: 'https://vilmanunez.com/wp-content/uploads/2016/03/herramientas-y-recursos-para-crear-curso-online.png', // URL de la imagen del curso
-        },
-        {
-            id: 4,
-            title: 'Curso de Fotografía Profesional',
-            description: 'Aprende a tomar fotos impresionantes.',
-            content: 'Técnicas de fotografía, edición de imágenes y composición.',
-            category: 'Fotografía',
-            averageRating: 2,
-            image: 'https://vilmanunez.com/wp-content/uploads/2016/03/herramientas-y-recursos-para-crear-curso-online.png', // URL de la imagen del curso
-        },
-    ];
+function CourseList() {
 
     const [isModalOpen, setModalOpen] = useState(false);
     const [selectedCourse, setSelectedCourse] = useState(null);
+    const [courses, setCourses] = useState([])
+
+    useEffect(() => {
+        const apiUrl = 'http://localhost:8000/courses';
+
+        axios
+            .get(apiUrl, { withCredentials: true })
+            .then((response) => {
+                console.log('Get course:', response.data);
+                setCourses(response.data)
+            })
+            .catch((error) => {
+                console.error('Error trying to create a new course:', error);
+            });
+    }, []);
 
     const openModal = (course) => {
         setSelectedCourse(course);
@@ -66,7 +43,7 @@ function CourseList({ courses }) {
                             <CardMedia
                                 component="img"
                                 height="200"
-                                image={course.image}
+                                image={'https://vilmanunez.com/wp-content/uploads/2016/03/herramientas-y-recursos-para-crear-curso-online.png'}
                             />
                             <CardContent>
                                 <Typography variant="h6" component="div">
