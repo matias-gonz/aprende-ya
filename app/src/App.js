@@ -4,7 +4,7 @@ import LoginForm from './login/LoginForm';
 import RegistrationForm from './registration/RegistrationForm';
 import CourseData from "./coursesList/CourseData";
 import CourseForm from "./courseForm/CourseForm";
-import PaymentForm from "./PaymentForm/PaymentForm";
+import PaymentForm from "./paymentForm/PaymentForm";
 
 
 function App() {
