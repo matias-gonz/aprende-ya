@@ -12,6 +12,7 @@ function PaymentForm() {
     const [expiryDate, setExpiryDate] = useState('');
     const [cvv, setCVV] = useState('');
     const [cardHolder, setCardHolder] = useState('');
+    const [loading, setLoading] = useState(false)
 
     const [paymentSuccess, setPaymentSuccess] = useState(false);
     const [paymentError, setPaymentError] = useState(false);
