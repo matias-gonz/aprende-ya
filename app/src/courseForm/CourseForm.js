@@ -2,13 +2,12 @@ import React, {useState} from 'react';
 import {
   Typography,
   TextField,
-  Button,
   Container,
 } from '@mui/material';
+import LoadingButton from '@mui/lab/LoadingButton';
 import {useNavigate} from "react-router-dom";
 import Header from "../header/Header";
 import axios from "axios";
-import Cookies from "js-cookie";
 
 const formStyle = {
   display: 'flex',
@@ -19,6 +18,8 @@ const formStyle = {
 
 function CourseForm() {
   const navigate = useNavigate();
+
+  const [loading, setLoading] = useState(false)
 
   const [courseData, setCourseData] = useState({
     title: '',
@@ -36,13 +37,17 @@ function CourseForm() {
     e.preventDefault();
     const apiUrl = 'http://localhost:8000/course';
 
+    setLoading(true)
+
     axios
       .post(apiUrl, courseData, { withCredentials: true })
       .then((response) => {
         console.log('Create course:', response.data);
+        setLoading(false)
         navigate('/');
       })
       .catch((error) => {
+        setLoading(false)
         console.error('Error trying to create a new course:', error);
       });
   };
@@ -91,9 +96,9 @@ function CourseForm() {
             onChange={handleInputChange}
             style={{marginBottom: '16px'}}
           />
-          <Button type="submit" variant="contained" color="primary">
+          <LoadingButton loading={loading} loadingIndicator="Agregando curso…" type="submit" variant="contained" color="primary">
             Agregar Curso
-          </Button>
+          </LoadingButton>
         </form>
       </Container>
     </div>

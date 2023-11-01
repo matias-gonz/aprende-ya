@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import {Container, Paper, TextField, Button} from '@mui/material';
+import {Container, Paper, TextField} from '@mui/material';
+import LoadingButton from '@mui/lab/LoadingButton';
 import Cards from 'react-credit-cards-2';
 import 'react-credit-cards-2/dist/es/styles-compiled.css';
 
@@ -9,6 +10,7 @@ function PaymentForm() {
     const [expiryDate, setExpiryDate] = useState('');
     const [cvv, setCVV] = useState('');
     const [cardHolder, setCardHolder] = useState('');
+    const [loading, setLoading] = useState(false)
 
     return (
         <Container maxWidth="sm">
@@ -20,7 +22,7 @@ function PaymentForm() {
                     cvc={cvv}
                     focused="number" // Puedes cambiar el enfoque según el campo que desees
                 />
-                <form>
+                <form onSubmit={handleSubmit}>
                     <TextField
                         label="Número de Tarjeta"
                         fullWidth
@@ -54,9 +56,9 @@ function PaymentForm() {
                         onChange={(e) => setCardHolder(e.target.value)}
                         style={{ marginBottom: '10px' }}
                     />
-                    <Button type="submit" variant="contained" color="primary" fullWidth>
-                        Pagar
-                    </Button>
+                    <LoadingButton loading={loading} loadingIndicator="Pagando…" type="submit" variant="contained" color="primary">
+                        Agregar Curso
+                    </LoadingButton>
                 </form>
             </Paper>
         </Container>
