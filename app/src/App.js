@@ -1,5 +1,5 @@
 import React from 'react';
-import {Route, Routes} from 'react-router-dom';
+import {Route, Router, Routes} from 'react-router-dom';
 import LoginForm from './login/LoginForm';
 import RegistrationForm from './registration/RegistrationForm';
 import CourseData from "./coursesList/CourseData";

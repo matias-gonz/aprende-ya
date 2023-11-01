@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {Grid, Card, CardContent, Typography, CardActions, Button, CardMedia} from '@mui/material';
 
-import CourseModal from "../CourseModal/CourseModal";
+import CourseModal from "../courseModal/CourseModal";
 import Header from "../header/Header";
 
 function CourseList({ courses }) {
