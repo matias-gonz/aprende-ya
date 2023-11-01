@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "aprende-ya"
+name = "certificates"
 version = "0.1.0"
 description = ""
 authors = ["matias-gonz <maigonzalez@fi.uba.ar>"]
@@ -7,11 +7,9 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.10"
-fastapi = "^0.103.2"
-uvicorn = "^0.23.2"
-sqlmodel = "^0.0.8"
-bcrypt = "^4.0.1"
-psycopg2-binary = "^2.9.9"
+py-solc-x = "^1.1.1"
+web3 = "^6.10.0"
+python-dotenv = "^1.0.0"
 
 
 [build-system]
