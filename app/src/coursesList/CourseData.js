@@ -1,8 +1,9 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Grid, Card, CardContent, Typography, CardActions, Button, CardMedia} from '@mui/material';
 
 import CourseModal from "../courseModal/CourseModal";
 import Header from "../header/Header";
+import axios from "axios";
 
 function CourseList() {
 
