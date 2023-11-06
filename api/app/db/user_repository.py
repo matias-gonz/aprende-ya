@@ -35,3 +35,18 @@ class UserRepository:
         if user:
             user.login(password)
             return user.to_read_model()
+
+    def get_user_by_id(self, user_id) -> Optional[UserRead]:
+        statement = select(User).where(User.id == user_id)
+        user = self.session.exec(statement).first()
+        if user:
+            return user.to_read_model()
+
+    def update_user(self, user_id, user_data) -> Optional[UserRead]:
+        user = self.get_user_by_id(user_id)
+        if user:
+            for field, value in user_data.items():
+                setattr(user, field, value)
+            self.session.commit()
+            return user.to_read_model()
+        return None

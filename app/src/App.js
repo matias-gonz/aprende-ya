@@ -6,6 +6,7 @@ import CourseData from "./coursesList/CourseData";
 import CourseForm from "./courseForm/CourseForm";
 import PaymentForm from "./paymentForm/PaymentForm";
 import CourseDescription from "./courseDescription/CourseDescription";
+import UserProfile from "./userProfile/UserProfile"
 
 
 function App() {
@@ -15,7 +16,8 @@ function App() {
       <Route path="/nuevo-curso" element={<CourseForm/>}/>
       <Route path="/registro" element={<RegistrationForm/>}/>
       <Route path="/login" element={<LoginForm/>}/>
-        <Route path="/curso/:id" element={<CourseDescription/>} />
+      <Route path="/curso/:id" element={<CourseDescription/>} />
+      <Route path="/profile" element={<UserProfile/>} />
       <Route path="/" element={<CourseData/>}/>
     </Routes>
   );

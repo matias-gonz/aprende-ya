@@ -11,20 +11,21 @@ class User(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     email: str
     password: str
+    name : str
 
     def login(self, password):
         if password != self.password:
             raise WrongCredentialsException()
 
     def to_read_model(self) -> UserRead:
-        return UserRead(id=self.id, email=self.email)
+        return UserRead(id=self.id, email=self.email, name=self.name, password=self.password)
 
     @classmethod
     def from_create_model(cls, user: UserCreate, user_repository):
         if user_repository.get_by_email(user.email):
             raise EmailTakenException()
 
-        return User(email=user.email, password=user.password)
+        return User(email=user.email, name=user.name,password=user.password)
 
 
 class Course(SQLModel, table=True):

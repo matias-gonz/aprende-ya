@@ -4,7 +4,7 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import {Link, useNavigate} from 'react-router-dom';
 import axios from 'axios';
-import {AccountCircle, Lock} from '@mui/icons-material';
+import {AccountCircle, Lock, Person} from '@mui/icons-material';
 import './LoginForm.css';
 import {Grid, Typography} from "@mui/material";
 import Cookies from 'js-cookie';
@@ -56,6 +56,19 @@ function LoginForm() {
             <Typography variant="h5">Iniciar sesión</Typography>
           </Grid>
           <Grid item xs={12}>
+          <TextField
+                            fullWidth
+                            label="Nombre"
+                            name="name"
+                            value={formData.name}
+                            onChange={handleInputChange}
+                            InputProps={{
+                                startAdornment: <Person />,
+                            }}
+                        />
+                    </Grid>
+          <Grid item xs={12}>
+            
             <TextField
               fullWidth
               label="Email"
