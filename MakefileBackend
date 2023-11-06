@@ -1,0 +1,9 @@
+build-api:
+	docker build api -t aprende-ya-api
+
+run-api: build-api
+	docker run -p 8000:8000 aprende-ya-api
+
+run:
+	docker-compose -f docker-compose-backend.yml up --build
+
