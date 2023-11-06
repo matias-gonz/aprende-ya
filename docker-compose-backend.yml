@@ -1,0 +1,25 @@
+version: "3.3"
+
+services:
+  db:
+    container_name: aprende-ya-db
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=db
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+
+  api:
+    container_name: aprende-ya-api
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    environment:
+      DATABASE_URL: postgresql://user:password@db:5432/db
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+
