@@ -11,7 +11,9 @@ class CourseBase(BaseModel):
 class CourseCreate(CourseBase):
     pass
 
+class CourseUpdate(CourseBase):
+    pass
 
 class CourseRead(CourseBase):
     id: int = Field(description="Course ID")
-    owner_id: str = Field(description="Owner id")
+    owner_id: int = Field(description="Owner id")
