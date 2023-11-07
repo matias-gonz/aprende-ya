@@ -1,21 +1,22 @@
-import React, { useState, useEffect } from 'react';
-import { Container, TextField, Button, Typography } from '@mui/material';
-import { Link, Navigate } from 'react-router-dom';
+import React, {useState, useEffect} from 'react';
+import {Container, TextField, Button, Typography} from '@mui/material';
+import {Link, Navigate, useNavigate} from 'react-router-dom';
 import NavBar from '../NavBar/NavBar';
-import { Email, Lock, Person } from '@mui/icons-material';
+import {Email, Lock, Person} from '@mui/icons-material';
 import Cookies from 'js-cookie';
 import axios from 'axios'; // Import Axios
 
-function UserProfile({isUserLoggedIn}) {
+function UserProfile({isUserLoggedIn, handleLogoutState}) {
   const [user, setUser] = useState({});
   const [isEditing, setIsEditing] = useState(false);
-  
-  
+
+  const navigate = useNavigate();
+
   useEffect(() => {
     const user_id = Cookies.get('user_id');
     const apiUrl = `http://localhost:8000/user/${user_id}`;
 
-    axios.get(apiUrl, { withCredentials: true })
+    axios.get(apiUrl, {withCredentials: true})
       .then((response) => setUser(response.data))
       .catch((error) => console.error('Error fetching user data: ', error));
   }, []); // Empty dependency array to execute the effect only once
@@ -23,13 +24,13 @@ function UserProfile({isUserLoggedIn}) {
   const handleEdit = () => {
     setIsEditing(true);
   };
-  
+
   const handleSave = () => {
     setIsEditing(false);
     const user_id = Cookies.get('user_id');
     const apiUrl = `http://localhost:8000/user/${user_id}`;
 
-    axios.put(apiUrl, user, { withCredentials: true })
+    axios.put(apiUrl, user, {withCredentials: true})
       .then((response) => {
         setUser(response.data);
         alert('User data has been saved successfully.');
@@ -39,34 +40,41 @@ function UserProfile({isUserLoggedIn}) {
   const handleDeleteUser = () => {
     const user_id = Cookies.get('user_id');
     const apiUrl = `http://localhost:8000/user/${user_id}`;
-    axios.delete(apiUrl, user, { withCredentials: true })
-    .then((response) => {
-      if (window.confirm('Usuario borrado con éxito. ¿Desea redirigir a la página de inicio?')) {
-        return <Navigate to="/login" />;
-      }
-    })
+    axios.delete(apiUrl, user, {withCredentials: true})
+      .then((response) => {
+        if (window.confirm('Usuario borrado con éxito. ¿Desea redirigir a la página de inicio?')) {
+          return <Navigate to="/login"/>;
+        }
+      })
       .catch((error) => {
         alert('Error al eliminar usuario');
         console.error('Error deleting user: ', error);
       });
   };
+
+  const handleLogout = () => {
+    Cookies.remove('user_id');
+    handleLogoutState();
+    navigate("/");
+  }
+
   return (
     <div>
       <NavBar isUserLoggedIn={isUserLoggedIn}/>
       <Container maxWidth="sm" elevation={0}>
         <div>
-          <Typography variant="h4" style={{ fontFamily: 'arial', marginTop: '20px' }}> Mi Perfil </Typography>
+          <Typography variant="h4" style={{fontFamily: 'arial', marginTop: '20px'}}> Mi Perfil </Typography>
           <form>
             <TextField
               label="Nombre"
               fullWidth
               variant="outlined"
               value={user.name}
-              onChange={(e) => setUser({ ...user, name: e.target.value })}
+              onChange={(e) => setUser({...user, name: e.target.value})}
               disabled={!isEditing}
-              style={{ marginTop: '20px' }}
+              style={{marginTop: '20px'}}
               InputProps={{
-                startAdornment: <Person />,
+                startAdornment: <Person/>,
               }}
             />
             <TextField
@@ -74,11 +82,11 @@ function UserProfile({isUserLoggedIn}) {
               fullWidth
               variant="outlined"
               value={user.email}
-              onChange={(e) => setUser({ ...user, email: e.target.value })}
+              onChange={(e) => setUser({...user, email: e.target.value})}
               disabled={!isEditing}
-              style={{ marginBottom: '20px', marginTop: '20px' }}
+              style={{marginBottom: '20px', marginTop: '20px'}}
               InputProps={{
-                startAdornment: <Email />,
+                startAdornment: <Email/>,
               }}
             />
             <TextField
@@ -86,11 +94,11 @@ function UserProfile({isUserLoggedIn}) {
               fullWidth
               variant="outlined"
               value={user.password}
-              onChange={(e) => setUser({ ...user, password: e.target.value })}
+              onChange={(e) => setUser({...user, password: e.target.value})}
               disabled={!isEditing}
-              style={{ marginBottom: '20px' }}
+              style={{marginBottom: '20px'}}
               InputProps={{
-                startAdornment: <Lock />,
+                startAdornment: <Lock/>,
               }}
             />
             {isEditing ? (
@@ -106,8 +114,7 @@ function UserProfile({isUserLoggedIn}) {
           <Button
             variant="contained"
             color="primary"
-            component={Link}
-            to="/login"
+            onClick={handleLogout}
             style={{
               marginTop: '20px',
               color: 'white',
@@ -118,9 +125,9 @@ function UserProfile({isUserLoggedIn}) {
           >
             Cerrar Sesión
           </Button>
-          </div>
-          <div>
-            <Button
+        </div>
+        <div>
+          <Button
             variant="contained"
             color="secondary"
             onClick={handleDeleteUser}
@@ -135,7 +142,6 @@ function UserProfile({isUserLoggedIn}) {
           >
             Eliminar usuario
           </Button>
-        
         </div>
       </Container>
     </div>

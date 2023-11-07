@@ -24,6 +24,11 @@ class App extends React.Component {
     localStorage.setItem('isUserLoggedIn', 'true');
   };
 
+  handleLogoutState = () => {
+    this.setState({ isUserLoggedIn: false });
+    localStorage.setItem('isUserLoggedIn', 'false');
+  };
+
   render() {
     const {isUserLoggedIn} = this.state;
 
@@ -36,7 +41,7 @@ class App extends React.Component {
             <Route path="/registro" element={<RegistrationForm/>}/>
             <Route path="/login" element={<LoginForm handleLoginState={this.handleLoginState}/>}/>
             <Route path="/curso/:id" element={<CourseDescription/>}/>
-            <Route path="/perfil" element={<UserProfile isUserLoggedIn={isUserLoggedIn}/>}/>
+            <Route path="/perfil" element={<UserProfile isUserLoggedIn={isUserLoggedIn} handleLogoutState={this.handleLogoutState}/>}/>
             <Route path="/" element={<CourseData isUserLoggedIn={isUserLoggedIn}/>}/>
           </Routes>
         </StyledEngineProvider>
