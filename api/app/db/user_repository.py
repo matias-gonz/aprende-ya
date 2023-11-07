@@ -43,7 +43,8 @@ class UserRepository:
             return user.to_read_model()
 
     def update_user(self, user_id, user_data) -> Optional[UserRead]:
-        user = self.get_user_by_id(user_id)
+        statement = select(User).where(User.id == user_id)
+        user = self.session.exec(statement).first()
         if user:
             for field, value in user_data.items():
                 setattr(user, field, value)

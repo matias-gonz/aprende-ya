@@ -23,7 +23,7 @@ function UserProfile() {
   const handleEdit = () => {
     setIsEditing(true);
   };
-
+  
   const handleSave = () => {
     setIsEditing(false);
     const user_id = Cookies.get('user_id');
