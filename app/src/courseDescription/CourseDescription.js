@@ -1,5 +1,5 @@
 import React from 'react';
-import {Container, Typography, Card, CardContent, Button, Grid, Link, Box} from '@mui/material';
+import {Container, Typography, Card, CardContent, Grid, Link, Box} from '@mui/material';
 import Header from "../header/Header";
 
 const CourseDescription = () => {

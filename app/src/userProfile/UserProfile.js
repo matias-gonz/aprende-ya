@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Container, TextField, Button, Typography } from '@mui/material';
-import { Link, useNavigate, Navigate } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import Header from '../header/Header';
 import { Email, Lock, Person } from '@mui/icons-material';
 import Cookies from 'js-cookie';
@@ -32,7 +32,7 @@ function UserProfile() {
     axios.put(apiUrl, user, { withCredentials: true })
       .then((response) => {
         setUser(response.data);
-        alert('User data has been saved successfully.');
+        alert('Usuario guardado');
       })
       .catch((error) => console.error('Error saving user data: ', error));
   };

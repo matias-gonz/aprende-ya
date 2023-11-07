@@ -5,10 +5,10 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlmodel import Session
 from starlette import status
 
-from app.course import CourseCreate, CourseRead
+from app.course import CourseCreate, CourseRead, CourseUpdate
 from app.db.course_repository import CourseRepository
 from app.db.database import create_db_and_tables, engine
-from app.db.exceptions import EmailTakenException, CourseNameTakenException
+from app.db.exceptions import EmailTakenException, CourseNameTakenException, CourseNotFoundException
 from app.db.user_repository import UserRepository
 from app.user import UserRead, UserCreate
 
@@ -111,3 +111,26 @@ async def create_course(course: CourseCreate, user_id: Annotated[str | None, Coo
             detail=e.message,
         )
 
+@app.put("/course", status_code=status.HTTP_201_CREATED)
+async def create_course(course: CourseCreate, user_id: Annotated[str | None, Cookie()] = None) -> CourseRead:
+    try:
+        with Session(engine) as session:
+            return CourseRepository(session).create(course, int(user_id))
+    except CourseNameTakenException as e:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail=e.message,
+        )
+    
+@app.put("/course/{course_id}", status_code=status.HTTP_200_OK)
+async def update_course(course_id: int, course_update: CourseUpdate, user_id: Annotated[str | None, Cookie()] = None) -> CourseRead:
+    try:
+        with Session(engine) as session:
+            course_repository = CourseRepository(session)
+            course = course_repository.update(course_id, course_update)
+
+    except CourseNotFoundException as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=e.message,
+        )
