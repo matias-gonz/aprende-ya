@@ -10,22 +10,39 @@ import UserProfile from "./userProfile/UserProfile"
 import {StyledEngineProvider, ThemeProvider} from "@mui/material";
 import appTheme from "./appTheme";
 
-function App() {
-  return (
-    <ThemeProvider theme={appTheme}>
-      <StyledEngineProvider injectFirst>
-        <Routes>
-          <Route path="/pago" element={<PaymentForm/>}/>
-          <Route path="/nuevo-curso" element={<CourseForm/>}/>
-          <Route path="/registro" element={<RegistrationForm/>}/>
-          <Route path="/login" element={<LoginForm/>}/>
-          <Route path="/curso/:id" element={<CourseDescription/>}/>
-          <Route path="/perfil" element={<UserProfile/>}/>
-          <Route path="/" element={<CourseData/>}/>
-        </Routes>
-      </StyledEngineProvider>
-    </ThemeProvider>
-  );
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+    const isUserLoggedIn = localStorage.getItem('isUserLoggedIn') === 'true';
+    this.state = {
+      isUserLoggedIn
+    };
+  }
+
+  handleLoginState = () => {
+    this.setState({isUserLoggedIn: true});
+    localStorage.setItem('isUserLoggedIn', 'true');
+  };
+
+  render() {
+    const {isUserLoggedIn} = this.state;
+
+    return (
+      <ThemeProvider theme={appTheme}>
+        <StyledEngineProvider injectFirst>
+          <Routes>
+            <Route path="/pago" element={<PaymentForm/>}/>
+            <Route path="/nuevo-curso" element={<CourseForm isUserLoggedIn={isUserLoggedIn}/>}/>
+            <Route path="/registro" element={<RegistrationForm/>}/>
+            <Route path="/login" element={<LoginForm handleLoginState={this.handleLoginState}/>}/>
+            <Route path="/curso/:id" element={<CourseDescription/>}/>
+            <Route path="/perfil" element={<UserProfile isUserLoggedIn={isUserLoggedIn}/>}/>
+            <Route path="/" element={<CourseData isUserLoggedIn={isUserLoggedIn}/>}/>
+          </Routes>
+        </StyledEngineProvider>
+      </ThemeProvider>
+    );
+  }
 }
 
 export default App;

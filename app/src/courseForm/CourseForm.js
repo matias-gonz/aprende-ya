@@ -16,7 +16,7 @@ const formStyle = {
   padding: '16px', // Agrega padding alrededor del formulario
 };
 
-function CourseForm() {
+function CourseForm({isUserLoggedIn}) {
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState(false)
@@ -54,7 +54,7 @@ function CourseForm() {
 
   return (
     <div>
-      <NavBar/>
+      <NavBar isUserLoggedIn={isUserLoggedIn}/>
       <Container maxWidth="sm">
         <Typography variant="h5" component="div" padding={2} display="flex" alignItems="center" justifyContent="center">
           Agregar Nuevo Curso

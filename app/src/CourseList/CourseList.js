@@ -8,7 +8,7 @@ import Container from "@mui/material/Container";
 
 import "./CourseList.css";
 
-function CourseList() {
+function CourseList({isUserLoggedIn}) {
 
   const [isModalOpen, setModalOpen] = useState(false);
   const [selectedCourse, setSelectedCourse] = useState(null);
@@ -40,7 +40,7 @@ function CourseList() {
 
   return (
     <Box className={"CourseList"}>
-      <NavBar/>
+      <NavBar isUserLoggedIn={isUserLoggedIn}/>
       <Container maxWidth="xl" style={{margin: '20px auto'}}>
         <Grid container spacing={2}>
           {courses.filter((course) => (category == null || course.category === category)).map((course) => (

@@ -10,7 +10,7 @@ import {Grid, Typography} from "@mui/material";
 import Cookies from 'js-cookie';
 
 
-function LoginForm() {
+function LoginForm({handleLoginState}) {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -41,6 +41,7 @@ function LoginForm() {
       .then((response) => {
         console.log('Login:', response.data);
         Cookies.set('user_id', response.data['id'], {expires: 1});
+        handleLoginState();
         navigate('/');
       })
       .catch((error) => {
@@ -57,19 +58,6 @@ function LoginForm() {
             <Typography variant="h5">Iniciar sesión</Typography>
           </Grid>
           <Grid item xs={12}>
-          <TextField
-                            fullWidth
-                            label="Nombre"
-                            name="name"
-                            value={formData.name}
-                            onChange={handleInputChange}
-                            InputProps={{
-                                startAdornment: <Person />,
-                            }}
-                        />
-                    </Grid>
-          <Grid item xs={12}>
-            
             <TextField
               fullWidth
               label="Email"
@@ -101,7 +89,8 @@ function LoginForm() {
           </Grid>
         </Grid>
       </form>
-      <Button color={"primary"} variant={"contained"} component={Link} to="/registro" style={{marginTop: '10px'}}>Registrarse</Button>
+      <Button color={"primary"} variant={"contained"} component={Link} to="/registro"
+              style={{marginTop: '10px'}}>Registrarse</Button>
     </Container>
   );
 }

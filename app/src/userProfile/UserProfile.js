@@ -6,7 +6,7 @@ import { Email, Lock, Person } from '@mui/icons-material';
 import Cookies from 'js-cookie';
 import axios from 'axios'; // Import Axios
 
-function UserProfile() {
+function UserProfile({isUserLoggedIn}) {
   const [user, setUser] = useState({});
   const [isEditing, setIsEditing] = useState(false);
   
@@ -52,7 +52,7 @@ function UserProfile() {
   };
   return (
     <div>
-      <NavBar />
+      <NavBar isUserLoggedIn={isUserLoggedIn}/>
       <Container maxWidth="sm" elevation={0}>
         <div>
           <Typography variant="h4" style={{ fontFamily: 'arial', marginTop: '20px' }}> Mi Perfil </Typography>
