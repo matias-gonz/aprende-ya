@@ -6,7 +6,7 @@ import {
 } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
 import {useNavigate} from "react-router-dom";
-import Header from "../header/Header";
+import NavBar from "../NavBar/NavBar";
 import axios from "axios";
 
 const formStyle = {
@@ -54,7 +54,7 @@ function CourseForm() {
 
   return (
     <div>
-      <Header/>
+      <NavBar/>
       <Container maxWidth="sm">
         <Typography variant="h5" component="div" padding={2} display="flex" alignItems="center" justifyContent="center">
           Agregar Nuevo Curso

@@ -1,0 +1,40 @@
+.NavBar {
+  width: 100%;
+  background: white;
+}
+
+.NavBar-toolbar {
+  padding: 0;
+  margin: 0 12%;
+  justify-content: center;
+  background: inherit;
+}
+
+.NavBar-title-container {
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+}
+
+.NavBar-title {
+  color: black;
+  font-weight: bold;
+}
+
+.NavBar-search {
+  width: 100%;
+}
+
+.NavBar-button {
+  font-size: 1rem;
+  border-radius: 2rem;
+  text-transform: none;
+  font-weight: bold;
+  background: linear-gradient(45deg, #843DF2, #B185F3);
+}
+
+.NavBar-button-container {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+}

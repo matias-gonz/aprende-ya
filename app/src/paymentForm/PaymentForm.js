@@ -4,7 +4,7 @@ import Cards from 'react-credit-cards-2';
 import 'react-credit-cards-2/dist/es/styles-compiled.css';
 import {green, red} from "@mui/material/colors";
 import LoadingButton from "@mui/lab/LoadingButton";
-import Header from "../header/Header";
+import NavBar from "../NavBar/NavBar";
 
 
 function PaymentForm() {
@@ -50,7 +50,7 @@ function PaymentForm() {
 
     return (
         <div>
-            <Header/>
+            <NavBar/>
             <Container maxWidth="sm" elevation={0}>
                 <div style={{ position: 'relative', paddingTop: '20px' }}>
                     <div style={{ position: 'relative', zIndex: 1 }}>

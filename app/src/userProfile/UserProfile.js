@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Container, TextField, Button, Typography } from '@mui/material';
-import { Link, useNavigate, Navigate } from 'react-router-dom';
-import Header from '../header/Header';
+import { Link, Navigate } from 'react-router-dom';
+import NavBar from '../NavBar/NavBar';
 import { Email, Lock, Person } from '@mui/icons-material';
 import Cookies from 'js-cookie';
 import axios from 'axios'; // Import Axios
@@ -52,7 +52,7 @@ function UserProfile() {
   };
   return (
     <div>
-      <Header />
+      <NavBar />
       <Container maxWidth="sm" elevation={0}>
         <div>
           <Typography variant="h4" style={{ fontFamily: 'arial', marginTop: '20px' }}> Mi Perfil </Typography>

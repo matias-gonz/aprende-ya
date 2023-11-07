@@ -1,11 +1,11 @@
 import React from 'react';
-import {Container, Typography, Card, CardContent, Button, Grid, Link, Box} from '@mui/material';
-import Header from "../header/Header";
+import {Container, Typography, Card, CardContent, Grid, Link, Box} from '@mui/material';
+import NavBar from "../NavBar/NavBar";
 
 const CourseDescription = () => {
     return (
         <div>
-            <Header/>
+            <NavBar/>
             <Container maxWidth="xl">
                 <Typography variant="h4" gutterBottom>
                     Nombre del Curso
