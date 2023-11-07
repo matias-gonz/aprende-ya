@@ -9,8 +9,10 @@ import axios from 'axios'; // Import Axios
 function UserProfile() {
   const [user, setUser] = useState({});
   const [isEditing, setIsEditing] = useState(false);
-  const user_id = Cookies.get('user_id');
+  
+  
   useEffect(() => {
+    const user_id = Cookies.get('user_id');
     const apiUrl = `http://localhost:8000/user/${user_id}`;
 
     axios.get(apiUrl, { withCredentials: true })
@@ -24,9 +26,10 @@ function UserProfile() {
 
   const handleSave = () => {
     setIsEditing(false);
+    const user_id = Cookies.get('user_id');
     const apiUrl = `http://localhost:8000/user/${user_id}`;
 
-    axios.put(apiUrl, { withCredentials: true }, user)
+    axios.put(apiUrl, user, { withCredentials: true })
       .then((response) => {
         setUser(response.data);
         alert('User data has been saved successfully.');
