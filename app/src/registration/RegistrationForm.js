@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Container, TextField, Button, Grid, Typography } from '@mui/material';
-import { Email, Lock } from '@mui/icons-material';
+import { Email, Lock, Person } from '@mui/icons-material';
 import axios from "axios";
 import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
@@ -39,9 +39,8 @@ function RegistrationForm() {
                 navigate('/login');
             })
             .catch((error) => {
+                alert("Error al registrarse :" , error)
                 console.error('Error trying to register:', error);
-                //TODO: Loading modal set false
-                //TODO: Error modal
             });
     };
 
@@ -52,6 +51,18 @@ function RegistrationForm() {
                 <Grid container spacing={2}>
                     <Grid item xs={12}>
                         <Typography variant="h5">Registro</Typography>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <TextField
+                            fullWidth
+                            label="Nombre"
+                            name="name"
+                            value={formData.name}
+                            onChange={handleInputChange}
+                            InputProps={{
+                                startAdornment: <Person />,
+                            }}
+                        />
                     </Grid>
                     <Grid item xs={12}>
                         <TextField
