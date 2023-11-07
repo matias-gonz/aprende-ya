@@ -39,9 +39,8 @@ function RegistrationForm() {
                 navigate('/login');
             })
             .catch((error) => {
+                alert("Error al registrarse :" , error)
                 console.error('Error trying to register:', error);
-                //TODO: Loading modal set false
-                //TODO: Error modal
             });
     };
 

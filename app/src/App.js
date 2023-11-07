@@ -17,7 +17,7 @@ function App() {
       <Route path="/registro" element={<RegistrationForm/>}/>
       <Route path="/login" element={<LoginForm/>}/>
       <Route path="/curso/:id" element={<CourseDescription/>} />
-      <Route path="/profile" element={<UserProfile/>} />
+      <Route path="/perfil" element={<UserProfile/>} />
       <Route path="/" element={<CourseData/>}/>
     </Routes>
   );

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Container, TextField, Button, Typography } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate, Navigate } from 'react-router-dom';
 import Header from '../header/Header';
 import { Email, Lock, Person } from '@mui/icons-material';
 import Cookies from 'js-cookie';
@@ -36,7 +36,20 @@ function UserProfile() {
       })
       .catch((error) => console.error('Error saving user data: ', error));
   };
-
+  const handleDeleteUser = () => {
+    const user_id = Cookies.get('user_id');
+    const apiUrl = `http://localhost:8000/user/${user_id}`;
+    axios.delete(apiUrl, user, { withCredentials: true })
+    .then((response) => {
+      if (window.confirm('Usuario borrado con éxito. ¿Desea redirigir a la página de inicio?')) {
+        return <Navigate to="/login" />;
+      }
+    })
+      .catch((error) => {
+        alert('Error al eliminar usuario');
+        console.error('Error deleting user: ', error);
+      });
+  };
   return (
     <div>
       <Header />
@@ -92,9 +105,25 @@ function UserProfile() {
           </form>
           <Button
             variant="contained"
-            color="secondary"
+            color="primary"
             component={Link}
             to="/login"
+            style={{
+              marginTop: '20px',
+              color: 'white',
+              '&:hover': {
+                backgroundColor: 'darkred',
+              },
+            }}
+          >
+            Cerrar Sesión
+          </Button>
+          </div>
+          <div>
+            <Button
+            variant="contained"
+            color="secondary"
+            onClick={handleDeleteUser}
             style={{
               marginTop: '20px',
               backgroundColor: 'red',
@@ -104,8 +133,9 @@ function UserProfile() {
               },
             }}
           >
-            Cerrar Sesión
+            Eliminar usuario
           </Button>
+        
         </div>
       </Container>
     </div>

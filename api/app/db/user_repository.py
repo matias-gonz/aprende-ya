@@ -1,6 +1,7 @@
 from typing import List, Optional
 
-from sqlmodel import select, Session
+from sqlmodel import select, Session, delete
+from sqlalchemy.exc import IntegrityError
 
 from app.db.models import User
 from app.user import UserRead, UserCreate
@@ -51,3 +52,14 @@ class UserRepository:
             self.session.commit()
             return user.to_read_model()
         return None
+
+
+    def delete_user(self, user_id) -> Optional[bool]:
+        try:
+            statement = delete(User).where(User.id == user_id)
+            self.session.execute(statement)
+            self.session.commit()
+            return True
+        except IntegrityError as e:
+            self.session.rollback()
+            return False

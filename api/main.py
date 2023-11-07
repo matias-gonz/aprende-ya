@@ -84,7 +84,16 @@ async def get_user(user_id: str) -> UserRead:
             status_code=status.HTTP_409_CONFLICT,
             detail=e.message,
         )
-
+@app.delete("/user/{user_id}", status_code=status.HTTP_200_OK)
+async def delete_user(user_id: str) -> dict:
+    try:
+        with Session(engine) as session:
+            return {"deleted": UserRepository(session).delete_user(user_id)}
+    except EmailTakenException as e:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail=e.message,
+        )
 @app.get("/courses", status_code=status.HTTP_200_OK)
 async def get_courses() -> List[CourseRead]:
     with Session(engine) as session:
@@ -101,3 +110,4 @@ async def create_course(course: CourseCreate, user_id: Annotated[str | None, Coo
             status_code=status.HTTP_409_CONFLICT,
             detail=e.message,
         )
+

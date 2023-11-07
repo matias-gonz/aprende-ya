@@ -70,7 +70,7 @@ function Header({ showCategory = false, category, setCategory }) {
                         <Button color="inherit" component={Link} to="/nuevo-curso" style={{ marginLeft: '30px' }}>
                             Crear Curso
                         </Button>
-                        <Button color="inherit" component={Link} to="/profile" style={{ marginLeft: '30px' }}>
+                        <Button color="inherit" component={Link} to="/perfil" style={{ marginLeft: '30px' }}>
                             Mi Perfil
                         </Button>
                     </Box>

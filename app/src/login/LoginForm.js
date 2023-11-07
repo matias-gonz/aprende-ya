@@ -44,6 +44,7 @@ function LoginForm() {
         navigate('/');
       })
       .catch((error) => {
+        alert('Error al intentar iniciar sesión: ', error)
         console.error('Error al intentar iniciar sesión:', error);
       });
   };
