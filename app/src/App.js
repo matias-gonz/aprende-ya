@@ -1,14 +1,14 @@
 import React from 'react';
 import {Route, Routes} from 'react-router-dom';
-import LoginForm from './login/LoginForm';
-import RegistrationForm from './registration/RegistrationForm';
-import CourseData from "./CourseList/CourseList";
-import CourseForm from "./courseForm/CourseForm";
-import PaymentForm from "./paymentForm/PaymentForm";
-import CourseDescription from "./courseDescription/CourseDescription";
-import UserProfile from "./userProfile/UserProfile"
+import LoginForm from './pages/login/LoginForm';
+import RegistrationForm from './pages/registration/RegistrationForm';
+import CourseForm from "./components/courseForm/CourseForm";
+import PaymentForm from "./components/paymentForm/PaymentForm";
+import CourseDescription from "./components/courseDescription/CourseDescription";
+import UserProfile from "./pages/userProfile/UserProfile"
 import {StyledEngineProvider, ThemeProvider} from "@mui/material";
 import appTheme from "./appTheme";
+import Home from "./pages/Home/Home";
 
 class App extends React.Component {
   constructor(props) {
@@ -42,7 +42,7 @@ class App extends React.Component {
             <Route path="/login" element={<LoginForm handleLoginState={this.handleLoginState}/>}/>
             <Route path="/curso/:id" element={<CourseDescription/>}/>
             <Route path="/perfil" element={<UserProfile isUserLoggedIn={isUserLoggedIn} handleLogoutState={this.handleLogoutState}/>}/>
-            <Route path="/" element={<CourseData isUserLoggedIn={isUserLoggedIn}/>}/>
+            <Route path="/" element={<Home isUserLoggedIn={isUserLoggedIn}/>}/>
           </Routes>
         </StyledEngineProvider>
       </ThemeProvider>

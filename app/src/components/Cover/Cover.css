@@ -1,0 +1,50 @@
+.Cover {
+  padding: 0 12%;
+  display: flex;
+  height: 95vh;
+  align-items: center;
+}
+
+.Cover-title-container {
+  flex-direction: column;
+}
+
+.Cover-title {
+  font-weight: bold;
+  color: #311B92;
+}
+
+.Cover-title-aprende-ya {
+  font-weight: bold;
+  background: linear-gradient(45deg, #843DF2, #B185F3);
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.Cover-image-container {
+  position: relative;
+  max-width: 500px;
+  height: 500px;
+  border-radius: 50%;
+  background: #B185F3;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.Cover-circle {
+  position: absolute;
+  border-radius: 50%;
+}
+
+.Cover-circle-medium {
+  width: 425px;
+  height: 425px;
+  background: #843DF2;
+}
+
+.Cover-circle-strong {
+  width: 350px;
+  height: 350px;
+  background: #311B92;
+}

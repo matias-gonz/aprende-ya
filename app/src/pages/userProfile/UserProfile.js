@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {Container, TextField, Button, Typography} from '@mui/material';
 import {Link, Navigate, useNavigate} from 'react-router-dom';
-import NavBar from '../NavBar/NavBar';
+import NavBar from '../../components/NavBar/NavBar';
 import {Email, Lock, Person} from '@mui/icons-material';
 import Cookies from 'js-cookie';
 import axios from 'axios'; // Import Axios

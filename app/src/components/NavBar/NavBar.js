@@ -20,7 +20,7 @@ class NavBar extends React.Component {
       <AppBar className={"NavBar"}>
         <Toolbar className={"NavBar-toolbar"} disableGutters={true}>
           <Box className={"NavBar-title-container"}>
-            <Typography variant={"h3"} className={"NavBar-title"}>ubademy</Typography>
+            <Typography variant={"h3"} className={"NavBar-title"}>AprendeYA</Typography>
           </Box>
           <TextField
             className={"NavBar-search"}
