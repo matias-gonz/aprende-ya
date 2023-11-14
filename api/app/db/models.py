@@ -11,7 +11,7 @@ class User(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     email: str
     password: str
-    name : str
+    name: str
 
     def login(self, password):
         if password != self.password:
@@ -32,7 +32,7 @@ class Course(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     title: str
     description: str
-    category: str
+    category: int
     content: str
     owner_id: int
 
@@ -49,5 +49,5 @@ class Course(SQLModel, table=True):
         return Course(title=course.title,
                       description=course.description,
                       category=course.category,
-                      content=course.content,
+                      content='',
                       owner_id=user_id)

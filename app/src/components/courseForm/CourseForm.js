@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {
   Typography,
   TextField,
-  Container,
+  Container, MenuItem, Select,
 } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
 import {useNavigate} from "react-router-dom";
@@ -24,8 +24,7 @@ function CourseForm({isUserLoggedIn}) {
   const [courseData, setCourseData] = useState({
     title: '',
     description: '',
-    content: '',
-    category: '',
+    category: 0,
   });
 
   const handleInputChange = (e) => {
@@ -78,24 +77,19 @@ function CourseForm({isUserLoggedIn}) {
             onChange={handleInputChange}
             style={{marginBottom: '16px'}}
           />
-          <TextField
+          <Select
             fullWidth
-            label="Contenido"
-            multiline
-            rows={5}
-            name="content"
-            value={courseData.content}
-            onChange={handleInputChange}
-            style={{marginBottom: '16px'}}
-          />
-          <TextField
-            fullWidth
-            label="Categoría"
-            name="category"
             value={courseData.category}
+            name={'category'}
             onChange={handleInputChange}
             style={{marginBottom: '16px'}}
-          />
+          >
+            <MenuItem value={0}>Programación</MenuItem>
+            <MenuItem value={1}>Matemática</MenuItem>
+            <MenuItem value={2}>Marketing</MenuItem>
+            <MenuItem value={3}>Economía</MenuItem>
+            <MenuItem value={4}>Arte</MenuItem>
+          </Select>
           <LoadingButton loading={loading} loadingIndicator="Agregando curso…" type="submit" variant="contained" color="primary">
             Agregar Curso
           </LoadingButton>
