@@ -1,7 +1,51 @@
 import "./CourseList.css";
 import {Component} from "react";
 import axios from "axios";
-import {Box, Tab, Tabs, Typography} from "@mui/material";
+import {
+  Box, Button,
+  Card,
+  CardActionArea,
+  CardActions,
+  CardContent,
+  CardMedia,
+  Grid, Rating,
+  Tab,
+  Tabs,
+  Typography
+} from "@mui/material";
+
+class CourseCard extends Component {
+  render() {
+    const {course} = this.props;
+    return (
+      <Card>
+        <CardActionArea>
+          <CardMedia
+            component="img"
+            height="140"
+            image={course.image}
+            alt={course.title}
+          />
+          <CardContent>
+            <Typography gutterBottom variant="h5" component="div">
+              {course.title}
+            </Typography>
+            <Rating name="half-rating-read" defaultValue={course.rating | 0} precision={0.5} readOnly />
+            <Typography variant="body1">
+              {course.description}
+            </Typography>
+          </CardContent>
+        </CardActionArea>
+        <CardActions>
+          <Button size="small" color="primary">
+            Inscribirse
+          </Button>
+        </CardActions>
+      </Card>
+    )
+  }
+}
+
 
 class CourseList extends Component {
   state = {
@@ -37,11 +81,13 @@ class CourseList extends Component {
             <Tab label="Arte" className={category === 4 ? 'CourseList-tab-selected' : 'CourseList-tab'}/>
           </Tabs>
         </Box>
+        <Grid container spacing={5}>
         {courses.filter((course) => (course.category === category)).map((course) => (
-          <div>
-            <p>{course.title}</p>
-          </div>
+          <Grid item xs={12} sm={6} md={4} key={course.id}>
+            <CourseCard course={course}/>
+          </Grid>
         ))}
+        </Grid>
       </Box>
     )
   }

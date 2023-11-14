@@ -25,6 +25,7 @@ function CourseForm({isUserLoggedIn}) {
     title: '',
     description: '',
     category: 0,
+    image: '',
   });
 
   const handleInputChange = (e) => {
@@ -74,6 +75,14 @@ function CourseForm({isUserLoggedIn}) {
             label="Descripción"
             name="description"
             value={courseData.description}
+            onChange={handleInputChange}
+            style={{marginBottom: '16px'}}
+          />
+          <TextField
+            fullWidth
+            label="Imágen"
+            name="image"
+            value={courseData.image}
             onChange={handleInputChange}
             style={{marginBottom: '16px'}}
           />
