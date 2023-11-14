@@ -2,12 +2,19 @@
   margin: 0 12%;
 }
 
+.CourseList-title {
+  margin-bottom: 1rem;
+}
+
 .CourseList-tab-selected {
   background-color: #a278ec;
   color: black;
   font-weight: bold;
+  font-family: 'Baloo 2', sans-serif;
+  font-size: 1.2rem;
 }
 
 .CourseList-tab {
-
+  font-family: 'Baloo 2', sans-serif;
+  font-size: 1.2rem;
 }

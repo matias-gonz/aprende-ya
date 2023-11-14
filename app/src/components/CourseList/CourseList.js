@@ -1,7 +1,7 @@
 import "./CourseList.css";
 import {Component} from "react";
 import axios from "axios";
-import {Box, Tab, Tabs} from "@mui/material";
+import {Box, Tab, Tabs, Typography} from "@mui/material";
 
 class CourseList extends Component {
   state = {
@@ -27,6 +27,7 @@ class CourseList extends Component {
     const {courses, category} = this.state;
     return (
       <Box className={"CourseList"}>
+        <Typography variant={"h3"} className={"CourseList-title"}>Explora cursos</Typography>
         <Box sx={{borderBottom: 1, borderColor: 'divider'}}>
           <Tabs value={category} onChange={this.handleTabChange} textColor="black" indicatorColor="secondary">
             <Tab label="Programación" className={category === 0 ? 'CourseList-tab-selected' : 'CourseList-tab'}/>
