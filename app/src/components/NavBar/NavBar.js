@@ -1,6 +1,6 @@
 import React from 'react';
-import {AppBar, Box, Button, InputAdornment, Link, TextField, Toolbar, Typography} from '@mui/material';
-import SearchIcon from '@mui/icons-material/Search';
+import {AppBar, Box, Button, Link, Toolbar} from '@mui/material';
+
 import './NavBar.css';
 
 class NavBar extends React.Component {
@@ -20,21 +20,8 @@ class NavBar extends React.Component {
       <AppBar className={"NavBar"}>
         <Toolbar className={"NavBar-toolbar"} disableGutters={true}>
           <Box className={"NavBar-title-container"}>
-            <Typography variant={"h3"} className={"NavBar-title"}>AprendeYA</Typography>
+            <Link href={"/"} variant={"h3"} className={"NavBar-title"}>AprendeYA</Link>
           </Box>
-          <TextField
-            className={"NavBar-search"}
-            placeholder="Search"
-            size="small"
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <SearchIcon/>
-                </InputAdornment>
-              ),
-              style: {borderRadius: '4rem'}
-            }}
-          />
           <Box className={"NavBar-button-container"}>
             {!isUserLoggedIn && (
               <Link href="/login" style={{textDecoration: 'none'}}>

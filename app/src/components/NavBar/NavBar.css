@@ -19,10 +19,7 @@
 .NavBar-title {
   color: black;
   font-weight: bold;
-}
-
-.NavBar-search {
-  width: 100%;
+  text-decoration: none;
 }
 
 .NavBar-button {
