@@ -1,3 +1,13 @@
 .CourseList {
-  background: white;
+  margin: 0 12%;
+}
+
+.CourseList-tab-selected {
+  background-color: #a278ec;
+  color: black;
+  font-weight: bold;
+}
+
+.CourseList-tab {
+
 }

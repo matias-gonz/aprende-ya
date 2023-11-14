@@ -26,31 +26,21 @@ class CourseList extends Component {
   render() {
     const {courses, category} = this.state;
     return (
-      <Box>
+      <Box className={"CourseList"}>
         <Box sx={{borderBottom: 1, borderColor: 'divider'}}>
-          <Tabs value={category} onChange={this.handleTabChange}>
-            <Tab label="Programación"/>
-            <Tab label="Matemática"/>
-            <Tab label="Marketing"/>
-            <Tab label="Economía"/>
-            <Tab label="Arte"/>
+          <Tabs value={category} onChange={this.handleTabChange} textColor="black" indicatorColor="secondary">
+            <Tab label="Programación" className={category === 0 ? 'CourseList-tab-selected' : 'CourseList-tab'}/>
+            <Tab label="Matemática" className={category === 1 ? 'CourseList-tab-selected' : 'CourseList-tab'}/>
+            <Tab label="Marketing" className={category === 2 ? 'CourseList-tab-selected' : 'CourseList-tab'}/>
+            <Tab label="Economía" className={category === 3 ? 'CourseList-tab-selected' : 'CourseList-tab'}/>
+            <Tab label="Arte" className={category === 4 ? 'CourseList-tab-selected' : 'CourseList-tab'}/>
           </Tabs>
         </Box>
-        {category === 0 && (
-          <p>Programación</p>
-        )}
-        {category === 1 && (
-          <p>Matemática</p>
-        )}
-        {category === 2 && (
-          <p>Marketing</p>
-        )}
-        {category === 3 && (
-          <p>Economía</p>
-        )}
-        {category === 4 && (
-          <p>Arte</p>
-        )}
+        {courses.filter((course) => (course.category === category)).map((course) => (
+          <div>
+            <p>{course.title}</p>
+          </div>
+        ))}
       </Box>
     )
   }
