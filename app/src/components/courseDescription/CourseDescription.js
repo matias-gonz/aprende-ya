@@ -1,65 +1,111 @@
 import React from 'react';
-import {Container, Typography, Card, CardContent, Grid, Link, Box} from '@mui/material';
+import {Typography, Grid, Paper, AppBar, Tab, Container, Tabs, Box} from '@mui/material';
 import NavBar from "../NavBar/NavBar";
+import CourseMaterialsList from "./CourseMaterial/CourseMaterialsList";
+
+const TabPanel = (props) => {
+    const { children, value, index, ...other } = props;
+
+    return (
+        <div role="tabpanel" hidden={value !== index} id={`tabpanel-${index}`} {...other}>
+            {value === index && (
+                <Box sx={{ p: 3 }}>
+                    <Typography>{children}</Typography>
+                </Box>
+            )}
+        </div>
+    );
+};
 
 const CourseDescription = () => {
+    const [value, setValue] = React.useState(2);
+
+    const handleChange = (event, newValue) => {
+        setValue(newValue);
+    };
+
     return (
         <div>
             <NavBar/>
-            <Container maxWidth="xl">
-                <Typography variant="h4" gutterBottom>
-                    Nombre del Curso
-                </Typography>
-                <Card style={{ margin: '20px auto' }}>
-                    <CardContent>
-                        <Typography variant="h5" gutterBottom>
-                            Descripción del Curso
-                        </Typography>
-                        <Typography variant="body1">
-                            Esta es una descripción detallada del curso. Aquí puedes explicar de qué trata el curso, sus objetivos, el temario y otros detalles relevantes.
-                        </Typography>
-                    </CardContent>
-                </Card>
-                <Grid container spacing={2}>
-                    <Grid item xs={12} sm={6}>
-                        <Card>
-                            <CardContent>
-                                <Typography variant="h5" gutterBottom>
-                                    Material del Curso
-                                </Typography>
-                                <Box display="flex" style={{ marginTop: '5px'}}>
-                                    <Link href="#" color="primary" style={{ marginRight: '10px' }}>
-                                        Material 1
-                                    </Link>
-                                </Box>
-                                <Box display="flex" style={{ marginTop: '5px'}}>
-                                    <Link href="#" color="primary" style={{ marginRight: '10px' }}>
-                                        Material 1
-                                    </Link>
-                                </Box>
-                                <Box display="flex" style={{ marginTop: '5px'}}>
-                                    <Link href="#" color="primary" style={{ marginRight: '10px' }}>
-                                        Material 1
-                                    </Link>
-                                </Box>
-                            </CardContent>
-
-                        </Card>
+            <Paper
+                style={{paddingTop: '80px'}}
+                elevation={0}
+                sx={{
+                    p: 2,
+                    margin: 'auto',
+                    maxWidth: '40%',
+                    flexGrow: 1,
+                }}
+            >
+                <Grid container spacing={2} alignItems="center" justify="center">
+                    {/* Imagen a la izquierda */}
+                    <Grid item xs={12} sm>
+                        <img
+                            src="https://pathwright.imgix.net/https%3A%2F%2Fcdn.filestackcontent.com%2Fapi%2Ffile%2FaG1M12goSV2FQ4lXQA2N%3Fsignature%3D888b9ea3eb997a4d59215bfbe2983c636df3c7da0ff8c6f85811ff74c8982e34%26policy%3DeyJjYWxsIjogWyJyZWFkIiwgInN0YXQiLCAiY29udmVydCJdLCAiZXhwaXJ5IjogNDYyMDM3NzAzMX0%253D?dpr=2&fit=crop&h=232&ixlib=python-1.1.0&w=310&s=d2196586804112441fb6ed1b12a78f01"
+                            alt="Foto del curso"
+                            style={{ width: '100%', marginBottom: '20px' }}
+                        />
                     </Grid>
-                    <Grid item xs={12} sm={6}>
-                        <Card>
-                            <CardContent>
-                                <Typography variant="h5" gutterBottom>
-                                    Consultas sobre el Curso
-                                </Typography>
-                                <Typography variant="body1">
-                                    Aquí puedes proporcionar información sobre cómo los estudiantes pueden realizar consultas sobre el curso. Puedes incluir un formulario de contacto o un enlace a una plataforma de preguntas y respuestas.
-                                </Typography>
-                            </CardContent>
-                        </Card>
+
+                    {/* Contenedor para el título y la descripción */}
+                    <Grid item xs={12} sm>
+                        <Paper elevation={0} style={{ padding: '20px' }}>
+                            {/* Título del curso */}
+                            <Typography variant="h4" gutterBottom>
+                                Título del Curso
+                            </Typography>
+                        </Paper>
                     </Grid>
                 </Grid>
-            </Container>
+            </Paper>
+
+            <Paper
+                style={{paddingTop: '80px'}}
+                elevation={0}
+                sx={{
+                    p: 2,
+                    margin: 'auto',
+                    maxWidth: '50%',
+                    flexGrow: 1,
+                }}
+            >
+                <Tabs
+                    value={value}
+                    onChange={handleChange}
+                    textColor="secondary"
+                    indicatorColor="secondary"
+                    aria-label="secondary tabs example"
+                >
+                    <Tab value="one" label="Curso" />
+                    <Tab value="two" label="Reseñas" />
+                    <Tab value="three" label="Foro" />
+                </Tabs>
+                <Grid container spacing={2} alignItems="center" justify="center">
+                    <Grid item xs={12} sm>
+                        <Paper elevation={0} style={{ padding: '20px' }}>
+                            {/* Descripción del curso */}
+                            <Typography variant="body1">
+                                Esta es una descripción detallada del curso. Puedes agregar más información sobre el contenido,
+                                los objetivos del curso, los requisitos previos, etc.
+                            </Typography>
+                            {/* Puedes agregar más contenido según sea necesario */}
+                        </Paper>
+                    </Grid>
+                </Grid>
+            </Paper>
+
+            <Paper
+                style={{paddingTop: '80px'}}
+                elevation={0}
+                sx={{
+                    p: 2,
+                    margin: 'auto',
+                    maxWidth: '50%',
+                    flexGrow: 1,
+                }}
+            >
+                <CourseMaterialsList/>
+            </Paper>
         </div>
     );
 };
