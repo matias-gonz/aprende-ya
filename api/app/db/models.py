@@ -36,6 +36,7 @@ class Course(SQLModel, table=True):
     content: str
     image: str
     owner_id: int
+    price: int
 
     def to_read_model(self) -> CourseRead:
         return CourseRead(id=self.id,
@@ -44,6 +45,7 @@ class Course(SQLModel, table=True):
                           category=self.category,
                           content=self.content,
                           image=self.image,
+                          price=self.price,
                           owner_id=self.owner_id)
 
     @classmethod
@@ -53,4 +55,5 @@ class Course(SQLModel, table=True):
                       category=course.category,
                       content='',
                       image=course.image,
+                      price=course.price,
                       owner_id=user_id)

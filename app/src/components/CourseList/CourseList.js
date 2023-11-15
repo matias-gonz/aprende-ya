@@ -34,10 +34,13 @@ class CourseCard extends Component {
             <Typography variant="body1">
               {course.description}
             </Typography>
+            <Typography variant="body1" className={"CourseList-price"}>
+              ${course.price}
+            </Typography>
           </CardContent>
         </CardActionArea>
         <CardActions>
-          <Button size="small" color="primary">
+          <Button size="small" color="primary" className={"CourseList-inscribirse-button"}>
             Inscribirse
           </Button>
         </CardActions>
@@ -72,7 +75,7 @@ class CourseList extends Component {
     return (
       <Box className={"CourseList"}>
         <Typography variant={"h3"} className={"CourseList-title"}>Explora cursos</Typography>
-        <Box sx={{borderBottom: 1, borderColor: 'divider'}}>
+        <Box sx={{borderBottom: 1, borderColor: 'divider', mb: 3}}>
           <Tabs value={category} onChange={this.handleTabChange} textColor="black" indicatorColor="secondary">
             <Tab label="Programación" className={category === 0 ? 'CourseList-tab-selected' : 'CourseList-tab'}/>
             <Tab label="Matemática" className={category === 1 ? 'CourseList-tab-selected' : 'CourseList-tab'}/>

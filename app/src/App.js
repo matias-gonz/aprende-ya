@@ -2,7 +2,7 @@ import React from 'react';
 import {Route, Routes} from 'react-router-dom';
 import LoginForm from './pages/login/LoginForm';
 import RegistrationForm from './pages/registration/RegistrationForm';
-import CourseForm from "./components/courseForm/CourseForm";
+import CourseForm from "./components/CourseForm/CourseForm";
 import PaymentForm from "./components/paymentForm/PaymentForm";
 import CourseDescription from "./components/courseDescription/CourseDescription";
 import UserProfile from "./pages/userProfile/UserProfile"

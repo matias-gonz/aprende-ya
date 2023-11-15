@@ -2,24 +2,23 @@ import React, {useState} from 'react';
 import {
   Typography,
   TextField,
-  Container, MenuItem, Select,
+  Container, MenuItem, Select, Box,
 } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
 import {useNavigate} from "react-router-dom";
 import NavBar from "../NavBar/NavBar";
 import axios from "axios";
+import "./CourseForm.css";
 
 const formStyle = {
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  padding: '16px', // Agrega padding alrededor del formulario
+  padding: '16px',
 };
 
 function CourseForm({isUserLoggedIn}) {
   const navigate = useNavigate();
-
-  const [loading, setLoading] = useState(false)
 
   const [courseData, setCourseData] = useState({
     title: '',
@@ -37,32 +36,26 @@ function CourseForm({isUserLoggedIn}) {
     e.preventDefault();
     const apiUrl = 'http://localhost:8000/course';
 
-    setLoading(true)
-
     axios
-      .post(apiUrl, courseData, { withCredentials: true })
+      .post(apiUrl, courseData, {withCredentials: true})
       .then((response) => {
         console.log('Create course:', response.data);
-        setLoading(false)
         navigate('/');
       })
       .catch((error) => {
-        setLoading(false)
         console.error('Error trying to create a new course:', error);
       });
   };
 
   return (
-    <div>
+    <Box>
       <NavBar isUserLoggedIn={isUserLoggedIn}/>
       <Container maxWidth="sm">
-        <Typography variant="h5" component="div" padding={2} display="flex" alignItems="center" justifyContent="center">
-          Agregar Nuevo Curso
-        </Typography>
+        <Typography variant={"h3"} className={"CourseForm-title"}>Crear curso</Typography>
         <form onSubmit={handleSubmit} style={formStyle}>
           <TextField
             fullWidth
-            label="Título del Curso"
+            label="Título"
             name="title"
             value={courseData.title}
             onChange={handleInputChange}
@@ -99,12 +92,20 @@ function CourseForm({isUserLoggedIn}) {
             <MenuItem value={3}>Economía</MenuItem>
             <MenuItem value={4}>Arte</MenuItem>
           </Select>
-          <LoadingButton loading={loading} loadingIndicator="Agregando curso…" type="submit" variant="contained" color="primary">
-            Agregar Curso
+          <TextField
+            fullWidth
+            label="Precio"
+            name="price"
+            value={courseData.price}
+            onChange={handleInputChange}
+            style={{marginBottom: '16px'}}
+          />
+          <LoadingButton type="submit" className={"CourseForm-button"}>
+            Crear
           </LoadingButton>
         </form>
       </Container>
-    </div>
+    </Box>
   );
 }
 
