@@ -1,6 +1,6 @@
 import React from 'react';
 import YouTube from 'react-youtube';
-import { Card, CardContent, Typography } from '@mui/material';
+import {Card, CardContent, Grid, Typography} from '@mui/material';
 
 const CourseMaterialsList = () => {
     const materials = [
@@ -17,22 +17,24 @@ const CourseMaterialsList = () => {
 
     const opts = {
         height: '200',
-        width: '300',
+        width: '500',
     };
 
     return (
-        <div>
+        <Grid container spacing={2}>
             {materials.map((material, index) => (
-                <Card key={index} style={{ maxWidth: '320px', margin: '16px' }}>
-                    <CardContent>
-                        <Typography gutterBottom variant="h5" component="h2">
-                            {material.title}
-                        </Typography>
-                        <YouTube videoId={material.videoLink.split('v=')[1]} opts={opts} />
-                    </CardContent>
-                </Card>
+                <Grid item xs={12} key={index} container justifyContent="center">
+                    <Card elevation={0} style={{ maxWidth: '500px', margin: '16px' }}>
+                        <CardContent>
+                            <Typography gutterBottom variant="h5" component="h2" justifyContent="center">
+                                {material.title}
+                            </Typography>
+                            <YouTube videoId={material.videoLink.split('v=')[1]} opts={opts} />
+                        </CardContent>
+                    </Card>
+                </Grid>
             ))}
-        </div>
+        </Grid>
     );
 };
 
