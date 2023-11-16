@@ -2,40 +2,94 @@ import React from "react";
 import "./CourseList.css";
 import { Component } from "react";
 import axios from "axios";
-import { Box, Button, Card, CardActionArea, CardActions, CardContent, CardMedia, Grid, Rating, Tab, Tabs, Typography, TextField } from "@mui/material";
+import { Box, Button, Card, CardActionArea, CardActions, CardContent, CardMedia, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, Rating, Tab, Tabs, Typography, TextField } from "@mui/material";
 
 class CourseCard extends Component {
+  state = {
+    openDialog: false
+  };
+
+  handleClickOpen = () => {
+    this.setState({ openDialog: true });
+  };
+
+  handleClose = () => {
+    this.setState({ openDialog: false });
+  };
+
+  handleViewComments = () => {
+    // Placeholder for navigation logic to the comments page
+    console.log('Navigating to comments page...');
+  };
+
   render() {
-    const {course} = this.props;
+    const { course } = this.props;
+    const { openDialog } = this.state;
+
     return (
-      <Card>
-        <CardActionArea>
-          <CardMedia
-            component="img"
-            height="140"
-            image={course.image}
-            alt={course.title}
-          />
-          <CardContent>
-            <Typography gutterBottom variant="h5" component="div">
-              {course.title}
-            </Typography>
-            <Rating name="half-rating-read" defaultValue={course.rating | 0} precision={0.5} readOnly />
-            <Typography variant="body1">
+      <>
+        <Card>
+          <CardActionArea>
+            <CardMedia
+              component="img"
+              height="140"
+              image={course.image}
+              alt={course.title}
+            />
+            <CardContent>
+              <Typography gutterBottom variant="h5" component="div">
+                {course.title}
+              </Typography>
+              <Rating name="half-rating-read" value={course.rating | 0} precision={0.5} readOnly />
+              <Typography variant="body2">
+                {course.description}
+              </Typography>
+              <Typography variant="body1" className={"CourseList-price"}>
+                ${course.price}
+              </Typography>
+            </CardContent>
+          </CardActionArea>
+          <CardActions>
+            <Button size="small" color="primary" onClick={this.handleClickOpen}>
+              Ver más
+            </Button>
+          </CardActions>
+        </Card>
+        <Dialog
+          open={openDialog}
+          onClose={this.handleClose}
+          aria-labelledby="course-details-title"
+          aria-describedby="course-details-description"
+        >
+          <DialogTitle id="course-details-title">{course.title}</DialogTitle>
+          <DialogContent>
+            <Typography gutterBottom variant="h6">
               {course.description}
             </Typography>
-            <Typography variant="body1" className={"CourseList-price"}>
-              ${course.price}
+            <Typography variant="subtitle1" color="textSecondary">
+              Información complementarias:
             </Typography>
-          </CardContent>
-        </CardActionArea>
-        <CardActions>
-          <Button size="small" color="primary" className={"CourseList-inscribirse-button"}>
-            Inscribirse
-          </Button>
-        </CardActions>
-      </Card>
-    )
+            <Typography variant="body2">Profesor: {course.professor}</Typography>
+            <Typography variant="body2">Duración: {course.duration}</Typography>
+            <Typography variant="body1" className={"CourseList-price"}>
+              Precio: ${course.price}
+            </Typography>
+            <Rating name="half-rating-read" value={course.rating | 0} precision={0.5} readOnly />
+            <Button size="small" onClick={this.handleViewComments}>
+              Ver comentarios
+            </Button>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={this.handleClose} color="primary">
+              Cerrar
+            </Button>
+            <Button onClick={this.handleClose} color="primary" className={"CourseList-buy-button"}>
+              Comprar el curso
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </>
+    );
   }
 }
 
