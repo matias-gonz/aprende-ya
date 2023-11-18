@@ -1,0 +1,8 @@
+.BuyButton {
+    font-size: 1rem;
+    border-radius: 2rem;
+    text-transform: none;
+    font-weight: bold;
+    background: linear-gradient(45deg, #843DF2, #B185F3);
+    margin-left: 1rem;
+}
