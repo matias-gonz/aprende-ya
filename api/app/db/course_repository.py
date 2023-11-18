@@ -28,3 +28,9 @@ class CourseRepository:
         course = self.session.exec(statement).first()
         if course:
             return course.to_read_model()
+
+    def get_course_by_id(self, course_id) -> Optional[CourseRead]:
+        statement = select(Course).where(Course.id == course_id)
+        course = self.session.exec(statement).first()
+        if course:
+            return course.to_read_model()

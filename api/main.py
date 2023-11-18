@@ -111,3 +111,14 @@ async def create_course(course: CourseCreate, user_id: Annotated[str | None, Coo
             detail=e.message,
         )
 
+@app.get("/course/{course_id}", status_code=status.HTTP_200_OK)
+async def get_course(course_id: str) -> CourseRead:
+    try:
+        with Session(engine) as session:
+            return CourseRepository(session).get_course_by_id(course_id)
+    except EmailTakenException as e:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail=e.message,
+        )
+

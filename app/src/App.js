@@ -40,7 +40,7 @@ class App extends React.Component {
             <Route path="/nuevo-curso" element={<CourseForm isUserLoggedIn={isUserLoggedIn}/>}/>
             <Route path="/registro" element={<RegistrationForm/>}/>
             <Route path="/login" element={<LoginForm handleLoginState={this.handleLoginState}/>}/>
-            <Route path="/curso/:id" element={<CourseDescription/>}/>
+            <Route path="/curso/:course_id" element={<CourseDescription/>}/>
             <Route path="/perfil" element={<UserProfile isUserLoggedIn={isUserLoggedIn} handleLogoutState={this.handleLogoutState}/>}/>
             <Route path="/" element={<Home isUserLoggedIn={isUserLoggedIn}/>}/>
           </Routes>

@@ -1,8 +1,13 @@
 import React from 'react';
-import {Typography, Grid, Paper, AppBar, Tab, Container, Tabs, Box} from '@mui/material';
+import {Typography, Grid, Paper, AppBar, Tab, Container, Tabs, Box, DialogContent, Dialog, Button} from '@mui/material';
 import NavBar from "../NavBar/NavBar";
 import CourseMaterialsList from "./CourseMaterial/CourseMaterialsList";
 import ReviewTab from "./ReviewTab/ReviewTab";
+import './CourseDescription.css';
+import PaymentForm from "../paymentForm/PaymentForm";
+import {useEffect, useState} from "react";
+import {useParams} from "react-router-dom";
+import axios from "axios";
 
 const TabPanel = (props) => {
     const { children, value, index, ...other } = props;
@@ -18,12 +23,36 @@ const TabPanel = (props) => {
     );
 };
 
+
 const CourseDescription = () => {
     const [tabValue, setTabValue] = React.useState(0);
+    const [openDialog, setOpenDialog] = React.useState(false)
+    const [course, setCourse] = useState({});
+
+    const { course_id } = useParams();
+
+    useEffect(() => {
+        const apiUrl = `http://localhost:8000/course/${course_id}`;
+
+        axios.get(apiUrl, {withCredentials: true})
+            .then((response) => setCourse(response.data))
+            .catch((error) => console.error('Error fetching user data: ', error));
+    }, []); // Empty dependency array to execute the effect only once
+
+    const handleClose = () => {
+        setOpenDialog(false);
+    };
 
     const handleChange = (event, newValue) => {
         setTabValue(newValue);
     };
+
+    const handleBuyClick = () => {
+        // Lógica para comprar el curso
+        setOpenDialog(true);
+    };
+
+
 
     return (
         <div>
@@ -41,17 +70,25 @@ const CourseDescription = () => {
                 <Grid container spacing={2} alignItems="center" justify="center">
                     <Grid item xs={12} sm>
                         <img
-                            src="https://pathwright.imgix.net/https%3A%2F%2Fcdn.filestackcontent.com%2Fapi%2Ffile%2FaG1M12goSV2FQ4lXQA2N%3Fsignature%3D888b9ea3eb997a4d59215bfbe2983c636df3c7da0ff8c6f85811ff74c8982e34%26policy%3DeyJjYWxsIjogWyJyZWFkIiwgInN0YXQiLCAiY29udmVydCJdLCAiZXhwaXJ5IjogNDYyMDM3NzAzMX0%253D?dpr=2&fit=crop&h=232&ixlib=python-1.1.0&w=310&s=d2196586804112441fb6ed1b12a78f01"
+                            src={course.image}
                             alt="Foto del curso"
                             style={{ width: '100%', marginBottom: '20px' }}
                         />
                     </Grid>
 
-                    <Grid item xs={12} sm>
-                        <Paper elevation={0} style={{ padding: '20px' }}>
+                    <Grid item xs={12} sm justify="center">
+                        <Paper Paper elevation={0} style={{ padding: '20px', textAlign: 'center' }}>
                             <Typography variant="h4" gutterBottom>
-                                Título del Curso
+                                {course.title}
                             </Typography>
+
+                            <Typography variant="h5" gutterBottom>
+                                ${course.price}
+                            </Typography>
+
+                            <Button className={"BuyButton"} variant="contained" color="primary" onClick={handleBuyClick}>
+                                Comprar
+                            </Button>
                         </Paper>
                     </Grid>
                 </Grid>
@@ -86,8 +123,7 @@ const CourseDescription = () => {
                         <Grid item xs={12} sm>
                             <Paper elevation={0} style={{ padding: '20px' }}>
                                 <Typography variant="body1">
-                                    Esta es una descripción detallada del curso. Puedes agregar más información sobre el contenido,
-                                    los objetivos del curso, los requisitos previos, etc.
+                                    {course.description}
                                 </Typography>
                             </Paper>
                         </Grid>
@@ -122,6 +158,17 @@ const CourseDescription = () => {
             <TabPanel value={tabValue} index={2}>
 
             </TabPanel>
+
+            <Dialog
+                open={openDialog}
+                onClose={handleClose}
+                aria-labelledby="course-details-title"
+                aria-describedby="course-details-description"
+            >
+                <DialogContent>
+                    <PaymentForm />
+                </DialogContent>
+            </Dialog>
         </div>
     );
 };
