@@ -5,6 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlmodel import Session
 from starlette import status
 
+from app.db.user_course_relation_repository import UserCourseRelationRepository
 from app.course import CourseCreate, CourseRead
 from app.db.course_repository import CourseRepository
 from app.db.database import create_db_and_tables, engine
@@ -121,4 +122,28 @@ async def get_course(course_id: str) -> CourseRead:
             status_code=status.HTTP_409_CONFLICT,
             detail=e.message,
         )
+
+@app.get("/course/{course_id}/user/{user_id}", status_code=status.HTTP_200_OK)
+async def get_course_information_by_user_id(course_id: int, user_id: int):
+    try:
+        with Session(engine) as session:
+            return UserCourseRelationRepository(session).get_course_relation_by_user_id(course_id, user_id)
+    except EmailTakenException as e:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail=e.message,
+        )
+
+@app.post("/course-purchases/{course_id}/users/{user_id}")
+def buy_course(course_id: int, user_id: int):
+    try:
+        with Session(engine) as session:
+            UserCourseRelationRepository(session).create(user_id, course_id)
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail=e.message,
+        )
+
+    return {"message": "Course purchased successfully!"}
 

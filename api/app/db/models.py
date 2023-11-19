@@ -25,7 +25,7 @@ class User(SQLModel, table=True):
         if user_repository.get_by_email(user.email):
             raise EmailTakenException()
 
-        return User(email=user.email, name=user.name,password=user.password)
+        return User(email=user.email, name=user.name, password=user.password)
 
 
 class Course(SQLModel, table=True):
@@ -37,6 +37,7 @@ class Course(SQLModel, table=True):
     image: str
     owner_id: int
     price: int
+    exam: str
 
     def to_read_model(self) -> CourseRead:
         return CourseRead(id=self.id,
@@ -46,7 +47,8 @@ class Course(SQLModel, table=True):
                           content=self.content,
                           image=self.image,
                           price=self.price,
-                          owner_id=self.owner_id)
+                          owner_id=self.owner_id,
+                          exam=self.exam)
 
     @classmethod
     def from_create_model(cls, course: CourseCreate, user_id: int):
@@ -56,4 +58,19 @@ class Course(SQLModel, table=True):
                       content='',
                       image=course.image,
                       price=course.price,
-                      owner_id=user_id)
+                      owner_id=user_id,
+                      exam=course.exam)
+
+
+class UserCourseRelation(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    user_id: int
+    course_id: int
+    is_finished: bool = False
+
+    @classmethod
+    def from_create_model(cls, user_id: int, course_id: int):
+        return UserCourseRelation(user_id=user_id, course_id=course_id)
+
+    def to_read_model(self) -> CourseRead:
+        return UserCourseRelation(user_id=self.user_id, course_id=self.course_id, is_finished=self.is_finished)

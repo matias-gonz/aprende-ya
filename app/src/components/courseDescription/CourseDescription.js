@@ -8,6 +8,7 @@ import PaymentForm from "../paymentForm/PaymentForm";
 import {useEffect, useState} from "react";
 import {useParams} from "react-router-dom";
 import axios from "axios";
+import CourseExam from "../CourseExam/CourseExam";
 
 const TabPanel = (props) => {
     const { children, value, index, ...other } = props;
@@ -24,10 +25,11 @@ const TabPanel = (props) => {
 };
 
 
-const CourseDescription = () => {
+const CourseDescription = ({isUserLoggedIn}) => {
     const [tabValue, setTabValue] = React.useState(0);
     const [openDialog, setOpenDialog] = React.useState(false)
     const [course, setCourse] = useState({});
+    const [examDialog, setExamDialog] = React.useState(false)
 
     const { course_id } = useParams();
 
@@ -37,10 +39,13 @@ const CourseDescription = () => {
         axios.get(apiUrl, {withCredentials: true})
             .then((response) => setCourse(response.data))
             .catch((error) => console.error('Error fetching user data: ', error));
+
+        console.log(course)
     }, []); // Empty dependency array to execute the effect only once
 
     const handleClose = () => {
         setOpenDialog(false);
+        setExamDialog(false);
     };
 
     const handleChange = (event, newValue) => {
@@ -49,14 +54,14 @@ const CourseDescription = () => {
 
     const handleBuyClick = () => {
         // Lógica para comprar el curso
-        setOpenDialog(true);
+        setExamDialog(true);
     };
 
 
 
     return (
         <div>
-            <NavBar/>
+            <NavBar isUserLoggedIn={isUserLoggedIn}/>
             <Paper
                 style={{paddingTop: '80px'}}
                 elevation={0}
@@ -162,11 +167,17 @@ const CourseDescription = () => {
             <Dialog
                 open={openDialog}
                 onClose={handleClose}
-                aria-labelledby="course-details-title"
-                aria-describedby="course-details-description"
             >
                 <DialogContent>
                     <PaymentForm />
+                </DialogContent>
+            </Dialog>
+            <Dialog
+                open={examDialog}
+                onClose={handleClose}
+            >
+                <DialogContent>
+                    <CourseExam questions={course.exam} />
                 </DialogContent>
             </Dialog>
         </div>
