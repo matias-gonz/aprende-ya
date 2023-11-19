@@ -7,6 +7,7 @@ class CourseBase(BaseModel):
     category: int = Field(description="Course category")
     image: str = Field(description="Course image")
     price: int = Field(description="Course price")
+    exam: str = Field(description="Exam details as JSON")
 
 
 class CourseCreate(CourseBase):

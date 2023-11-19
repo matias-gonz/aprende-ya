@@ -9,6 +9,7 @@ import UserProfile from "./pages/userProfile/UserProfile"
 import {StyledEngineProvider, ThemeProvider} from "@mui/material";
 import appTheme from "./appTheme";
 import Home from "./pages/Home/Home";
+import CourseCreation from "./components/CourseCreation/CourseCreation";
 
 class App extends React.Component {
   constructor(props) {
@@ -37,10 +38,10 @@ class App extends React.Component {
         <StyledEngineProvider injectFirst>
           <Routes>
             <Route path="/pago" element={<PaymentForm/>}/>
-            <Route path="/nuevo-curso" element={<CourseForm isUserLoggedIn={isUserLoggedIn}/>}/>
+            <Route path="/nuevo-curso" element={<CourseCreation isUserLoggedIn={isUserLoggedIn}/>}/>
             <Route path="/registro" element={<RegistrationForm/>}/>
             <Route path="/login" element={<LoginForm handleLoginState={this.handleLoginState}/>}/>
-            <Route path="/curso/:course_id" element={<CourseDescription/>}/>
+            <Route path="/curso/:course_id" element={<CourseDescription isUserLoggedIn={isUserLoggedIn}/>}/>
             <Route path="/perfil" element={<UserProfile isUserLoggedIn={isUserLoggedIn} handleLogoutState={this.handleLogoutState}/>}/>
             <Route path="/" element={<Home isUserLoggedIn={isUserLoggedIn}/>}/>
           </Routes>
