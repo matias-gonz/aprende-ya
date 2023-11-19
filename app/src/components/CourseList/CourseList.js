@@ -21,8 +21,9 @@ import {
   Tabs,
   Typography,
   TextField,
-  Link
+  Link, IconButton, InputAdornment, Container
 } from "@mui/material";
+import SearchIcon from '@mui/icons-material/Search';
 
 class CourseCard extends Component {
   state = {
@@ -105,24 +106,42 @@ class CourseList extends React.Component {
   return (
     <Box className={"CourseList"}>
       <Typography variant={"h3"} className={"CourseList-title"}>Explora cursos</Typography>
-      <TextField
-        variant="outlined"
-        placeholder="Buscar por título"
-        onChange={this.handleSearchChange}
-        size="small"
-        className={"CourseList-search"}
-      />
-      <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 3 }}>
-        <Tabs value={category} onChange={this.handleTabChange} textColor="black" indicatorColor="secondary">
-          <Tab label="Programación" />
-          <Tab label="Matemática" />
-          <Tab label="Marketing" />
-          <Tab label="Economía" />
-          <Tab label="Arte" />
-          <Tab label="Todos" />
-        </Tabs>
-      </Box>
-      <Grid container spacing={5}>
+      <Grid container>
+        <Grid item>
+          <Container style={{ padding: 0 }}>
+            <Tabs value={category} onChange={this.handleTabChange} textColor="black" indicatorColor="secondary">
+              <Tab label="Todos" />
+              <Tab label="Programación" />
+              <Tab label="Matemática" />
+              <Tab label="Marketing" />
+              <Tab label="Economía" />
+              <Tab label="Arte" />
+            </Tabs>
+          </Container>
+        </Grid>
+        <Grid item xs={5}>
+          <Container style={{boxSizing: "content-box"}}>
+            <TextField
+                variant="outlined"
+                placeholder="Buscar por título"
+                onChange={this.handleSearchChange}
+                size="small"
+                className={"CourseList-search"}
+                fullWidth
+                InputProps={{
+                  endAdornment: (
+                      <InputAdornment position="start">
+                        <IconButton>
+                          <SearchIcon />
+                        </IconButton>
+                      </InputAdornment>
+                  ),
+                }}
+            />
+          </Container>
+        </Grid>
+      </Grid>
+      <Grid container spacing={5} style={{marginTop: '10px'}}>
         {filteredCourses.map(course => (
           <Grid item xs={12} sm={6} md={4} key={course.id}>
             <CourseCard course={course} />
