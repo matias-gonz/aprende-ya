@@ -52,6 +52,9 @@ def main():
     with open('tx_receipt.txt', 'w') as f:
         f.write(str(tx_receipt))
 
+    with open('abi.txt', 'w') as f:
+        f.write(str(contract_abi))
+
 
 if __name__ == '__main__':
     main()

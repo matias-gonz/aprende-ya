@@ -1,6 +1,7 @@
 from typing import Optional
 from sqlmodel import SQLModel, Field
 
+from app.certificate import CertificateRead
 from app.db.exceptions import EmailTakenException, WrongCredentialsException
 from app.user import UserRead, UserCreate
 
@@ -74,3 +75,17 @@ class UserCourseRelation(SQLModel, table=True):
 
     def to_read_model(self) -> CourseRead:
         return UserCourseRelation(user_id=self.user_id, course_id=self.course_id, is_finished=self.is_finished)
+
+
+class Certificate(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    user_id: int
+    course_id: int
+    hash: str
+
+    @classmethod
+    def from_create_model(cls, user_id: int, course_id: int, hash: str):
+        return Certificate(user_id=user_id, course_id=course_id, hash=hash)
+
+    def to_read_model(self) -> CertificateRead:
+        return CertificateRead(id=self.id, user_id=self.user_id, course_id=self.course_id, hash=self.hash)
