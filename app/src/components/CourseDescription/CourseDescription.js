@@ -4,11 +4,12 @@ import NavBar from "../NavBar/NavBar";
 import CourseMaterialsList from "./CourseMaterial/CourseMaterialsList";
 import ReviewTab from "./ReviewTab/ReviewTab";
 import './CourseDescription.css';
-import PaymentForm from "../paymentForm/PaymentForm";
+import PaymentForm from "../PaymentForm/PaymentForm";
 import {useEffect, useState} from "react";
 import {useParams} from "react-router-dom";
 import axios from "axios";
 import CourseExam from "../CourseExam/CourseExam";
+import Cookies from "js-cookie";
 
 const TabPanel = (props) => {
     const { children, value, index, ...other } = props;
@@ -27,7 +28,7 @@ const TabPanel = (props) => {
 
 const CourseDescription = ({isUserLoggedIn}) => {
     const [tabValue, setTabValue] = React.useState(0);
-    const [openDialog, setOpenDialog] = React.useState(false)
+    const [buyDialog, setBuyDialog] = React.useState(false)
     const [course, setCourse] = useState({});
     const [examDialog, setExamDialog] = React.useState(false)
 
@@ -39,12 +40,10 @@ const CourseDescription = ({isUserLoggedIn}) => {
         axios.get(apiUrl, {withCredentials: true})
             .then((response) => setCourse(response.data))
             .catch((error) => console.error('Error fetching user data: ', error));
-
-        console.log(course)
     }, []); // Empty dependency array to execute the effect only once
 
     const handleClose = () => {
-        setOpenDialog(false);
+        setBuyDialog(false);
         setExamDialog(false);
     };
 
@@ -53,8 +52,7 @@ const CourseDescription = ({isUserLoggedIn}) => {
     };
 
     const handleBuyClick = () => {
-        // Lógica para comprar el curso
-        setExamDialog(true);
+        setBuyDialog(true)
     };
 
 
@@ -165,11 +163,11 @@ const CourseDescription = ({isUserLoggedIn}) => {
             </TabPanel>
 
             <Dialog
-                open={openDialog}
+                open={buyDialog}
                 onClose={handleClose}
             >
                 <DialogContent>
-                    <PaymentForm />
+                    <PaymentForm course_id={course.id} price={course.price} />
                 </DialogContent>
             </Dialog>
             <Dialog

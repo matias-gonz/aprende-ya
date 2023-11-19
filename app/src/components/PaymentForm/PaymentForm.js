@@ -5,9 +5,11 @@ import 'react-credit-cards-2/dist/es/styles-compiled.css';
 import {green, red} from "@mui/material/colors";
 import LoadingButton from "@mui/lab/LoadingButton";
 import NavBar from "../NavBar/NavBar";
+import Cookies from "js-cookie";
+import axios from "axios";
 
 
-function PaymentForm() {
+function PaymentForm({ course_id, price }) {
     const [cardNumber, setCardNumber] = useState('');
     const [expiryDate, setExpiryDate] = useState('');
     const [cvv, setCVV] = useState('');
@@ -33,6 +35,16 @@ function PaymentForm() {
         setPaymentError(false);
     };
 
+    const handleBuy = () => {
+        // Lógica para comprar el curso
+        const user_id = Cookies.get('user_id');
+        const apiUrl = `http://localhost:8000/course-purchases/${course_id}/users/${user_id}`;
+
+        axios.post(apiUrl, {withCredentials: true})
+            .then((response) => console.log(response))
+            .catch((error) => console.error('Error on course purchase: ', error));
+    };
+
     const handlePayment = () => {
 
         setLoading(true)
@@ -41,6 +53,7 @@ function PaymentForm() {
             // This code will be executed after the specified delay (in milliseconds)
             setLoading(false)
             if (cardNumber !== '0000000000000000') {
+                handleBuy()
                 handleSuccess()
             } else {
                 handleError()
@@ -131,6 +144,22 @@ function PaymentForm() {
                             style={{ marginBottom: '10px' }}
                         />
                     </form>
+                    <TextField
+                        label="Monto a pagar"
+                        fullWidth
+                        variant="outlined"
+                        value={`$${price}`} // Aquí el monto que paga el usuario
+                        disabled
+                        style={{ marginBottom: '10px' }}
+                    />
+                    <TextField
+                        label="Monto para el Instructor"
+                        fullWidth
+                        variant="outlined"
+                        value={`$${price * 0.9}`} // Aquí el % de comisión
+                        disabled
+                        style={{ marginBottom: '10px' }}
+                    />
                 </div>
                 <div>
                     <LoadingButton loading={loading} loadingIndicator="Pagando…" type="submit" variant="contained" color="primary" fullWidth onClick={handlePayment}>
