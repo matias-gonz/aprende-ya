@@ -154,7 +154,7 @@ const CourseDescription = ({isUserLoggedIn}) => {
                         flexGrow: 1,
                     }}
                 >
-                    <ReviewTab/>
+                    <ReviewTab course_id={course.id}/>
                 </Paper>
 
             </TabPanel>

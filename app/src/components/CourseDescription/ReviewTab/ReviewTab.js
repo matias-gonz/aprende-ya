@@ -1,24 +1,40 @@
 import React from 'react';
 import { Box, Typography, Divider, List, ListItem, ListItemText, Rating, Avatar } from '@mui/material';
+import {useEffect, useState} from "react";
+import axios from "axios";
 
-const ReviewsTab = () => {
-    const reviews = [
-        {
-            id: 1,
-            name: 'Juan Perez',
-            comment: 'Excelente curso, lo recomiendo totalmente. Muy útil y bien explicado.',
-            rating: 5,
-            avatar: 'https://randomuser.me/api/portraits/men/1.jpg',
-        },
-        {
-            id: 2,
-            name: 'María González',
-            comment: 'El contenido del curso es bastante completo. La presentación de algunos temas podría mejorar.',
-            rating: 4,
-            avatar: 'https://randomuser.me/api/portraits/women/2.jpg',
-        },
-        // Agrega más reseñas según sea necesario
-    ];
+const ReviewsTab = ({ course_id }) => {
+    const [courseReviews, setCourseReviews] = useState([]);
+    const [users, setUsers] = useState([])
+
+
+
+    useEffect(() => {
+        const courseApiUrl = `http://localhost:8000/course/${course_id}`;
+
+        axios.get(courseApiUrl, {withCredentials: true})
+            .then((response) => setCourseReviews(response.data))
+            .catch((error) => console.error('Error fetching user data: ', error));
+
+        const userApiUrl = `http://localhost:8000/users`;
+
+        axios.get(userApiUrl, {withCredentials: true})
+            .then((response) => setUsers(response.data))
+            .catch((error) => console.error('Error fetching user data: ', error));
+
+
+    }, []); // Empty dependency array to execute the effect only once
+
+
+    const reviews = courseReviews.map(relation => {
+        const user = users.find(user => user.id === relation.user_id);
+
+        return {
+            name: user ? user.name : 'Usuario no encontrado',
+            comment: relation.review || 'Sin comentario',
+            rating: relation.rating || 0 // Si tienes un campo de rating en userCourseRelations
+        };
+    });
 
     return (
         <Box sx={{ p: 3 }}>
