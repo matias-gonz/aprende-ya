@@ -147,6 +147,17 @@ async def get_course_information_by_user_id(course_id: int, user_id: int):
             detail=e.message,
         )
 
+@app.get("/courses/{user_id}", status_code=status.HTTP_200_OK)
+async def get_courses_by_user_id(user_id: int):
+    try:
+        with Session(engine) as session:
+            return UserCourseRelationRepository(session).get_courses_by_user_id(user_id)
+    except EmailTakenException as e:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail=e.message,
+        )
+
 
 @app.post("/course-purchases/{course_id}/users/{user_id}")
 def buy_course(course_id: int, user_id: int):

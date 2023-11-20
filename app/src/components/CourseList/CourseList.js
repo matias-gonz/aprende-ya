@@ -1,43 +1,26 @@
-import React from "react";
+import React, {Component} from "react";
 import "./CourseList.css";
-import { Component } from "react";
 import axios from "axios";
 import {
   Box,
-  Button,
   Card,
   CardActionArea,
-  CardActions,
   CardContent,
   CardMedia,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
+  Container,
   Grid,
+  IconButton,
+  InputAdornment,
   Rating,
   Tab,
   Tabs,
-  Typography,
   TextField,
-  Link, IconButton, InputAdornment, Container
+  Typography
 } from "@mui/material";
 import SearchIcon from '@mui/icons-material/Search';
+import Cookies from "js-cookie";
 
 class CourseCard extends Component {
-  state = {
-    openDialog: false
-  };
-
-  handleClickOpen = () => {
-    this.setState({ openDialog: true });
-  };
-
-  handleClose = () => {
-    this.setState({ openDialog: false });
-  };
-
   render() {
     const { course } = this.props;
 
@@ -75,7 +58,8 @@ class CourseList extends React.Component {
   state = {
     courses: [],
     category: 0,
-    searchQuery: ''
+    searchQuery: '',
+    coursesRelation: []
   }
 
   componentDidMount() {
@@ -86,6 +70,16 @@ class CourseList extends React.Component {
       .catch((error) => {
         console.error('Error fetching courses: ', error);
       });
+
+    const user_id = Cookies.get('user_id');
+    const apiUrl = `http://localhost:8000/courses/${user_id}`;
+    axios.get(apiUrl)
+        .then((response) => {
+          this.setState({ coursesRelation: response.data });
+        })
+        .catch((error) => {
+          console.error('Error fetching courses: ', error);
+        });
   }
 
   handleTabChange = (event, newValue) => {
@@ -97,11 +91,21 @@ class CourseList extends React.Component {
   }
 
   render() {
-  const { courses, category, searchQuery } = this.state;
-  const filteredCourses = courses.filter(course =>
-    (category === 5 ? true : course.category === category) &&
-    course.title.toLowerCase().includes(searchQuery)
-  );
+    const { courses, category, searchQuery, coursesRelation } = this.state;
+
+    let filteredCourses = []
+
+    if (category === 0) {
+      const userCourseIds = coursesRelation.map(course => course.course_id);
+      const userCoursesSet = new Set(userCourseIds);
+
+      filteredCourses = courses.filter(course => userCoursesSet.has(course.id));
+    } else {
+      filteredCourses = courses.filter(course =>
+          (category === 6 ? true : course.category === category) &&
+          course.title.toLowerCase().includes(searchQuery)
+      );
+    }
 
   return (
     <Box className={"CourseList"}>
@@ -110,12 +114,13 @@ class CourseList extends React.Component {
         <Grid item>
           <Container style={{ padding: 0 }}>
             <Tabs value={category} onChange={this.handleTabChange} textColor="black" indicatorColor="secondary">
-              <Tab label="Todos" />
+              <Tab label="Mis Cursos" />
               <Tab label="Programación" />
               <Tab label="Matemática" />
               <Tab label="Marketing" />
               <Tab label="Economía" />
               <Tab label="Arte" />
+              <Tab label="Todos" />
             </Tabs>
           </Container>
         </Grid>
