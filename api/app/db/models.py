@@ -7,6 +7,8 @@ from app.user import UserRead, UserCreate
 from app.questions import QuestionCreate, QuestionRead
 from app.course import CourseRead, CourseCreate
 
+from app.user_course_relation import UserCourseRelationRead
+
 
 class User(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
@@ -68,13 +70,20 @@ class UserCourseRelation(SQLModel, table=True):
     user_id: int
     course_id: int
     is_finished: bool = False
+    review: Optional[str]
+    rating: Optional[int]
 
     @classmethod
     def from_create_model(cls, user_id: int, course_id: int):
         return UserCourseRelation(user_id=user_id, course_id=course_id)
 
-    def to_read_model(self) -> CourseRead:
-        return UserCourseRelation(user_id=self.user_id, course_id=self.course_id, is_finished=self.is_finished)
+    def to_read_model(self) -> UserCourseRelationRead:
+        return UserCourseRelation(
+            user_id=self.user_id,
+            course_id=self.course_id,
+            is_finished=self.is_finished,
+            review=self.review,
+            rating=self.rating)
 
 
 class Certificate(SQLModel, table=True):

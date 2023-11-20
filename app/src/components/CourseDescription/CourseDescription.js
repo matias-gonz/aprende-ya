@@ -12,6 +12,7 @@ import {useParams} from "react-router-dom";
 import axios from "axios";
 import CourseExam from "../CourseExam/CourseExam";
 import Cookies from "js-cookie";
+import ReviewModal from "../ReviewModal/ReviewModal";
 
 const TabPanel = (props) => {
     const { children, value, index, ...other } = props;
@@ -33,6 +34,7 @@ const CourseDescription = ({isUserLoggedIn}) => {
     const [buyDialog, setBuyDialog] = React.useState(false)
     const [course, setCourse] = useState({});
     const [examDialog, setExamDialog] = React.useState(false)
+    const [reviewModal, setReviewModal] = React.useState(false)
 
     const { course_id } = useParams();
 
@@ -156,7 +158,7 @@ const CourseDescription = ({isUserLoggedIn}) => {
                         flexGrow: 1,
                     }}
                 >
-                    <ReviewTab/>
+                    <ReviewTab course_id={course.id}/>
                 </Paper>
 
             </TabPanel>
@@ -189,6 +191,14 @@ const CourseDescription = ({isUserLoggedIn}) => {
             >
                 <DialogContent>
                     <CourseExam questions={course.exam} />
+                </DialogContent>
+            </Dialog>
+            <Dialog
+                open={reviewModal}
+                onClose={handleClose}
+            >
+                <DialogContent>
+                    <ReviewModal setReviewModal={setReviewModal} course_id={course.id}/>
                 </DialogContent>
             </Dialog>
         </div>

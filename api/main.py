@@ -18,6 +18,7 @@ from app.db.database import create_db_and_tables, engine
 from app.db.exceptions import EmailTakenException, CourseNameTakenException
 from app.db.user_repository import UserRepository
 from app.user import UserRead, UserCreate
+from app.user_course_relation import UserCourseRelationCreate
 
 origins = [
     "http://localhost:3000",
@@ -155,6 +156,28 @@ async def get_courses_by_user_id(user_id: int):
         with Session(engine) as session:
             return UserCourseRelationRepository(session).get_courses_by_user_id(user_id)
     except EmailTakenException as e:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail=e.message,
+        )
+
+@app.get("/course/{course_id}/reviews", status_code=status.HTTP_200_OK)
+async def get_courses_by_user_id(course_id: int):
+    try:
+        with Session(engine) as session:
+            return UserCourseRelationRepository(session).get_reviews_by_course_id(course_id)
+    except EmailTakenException as e:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail=e.message,
+        )
+
+@app.put("/course/{course_id}/user/{user_id}", status_code=status.HTTP_201_CREATED)
+async def edit_user(course_id: int, user_id: int, user_course_relation: UserCourseRelationCreate):
+    try:
+        with Session(engine) as session:
+            return UserCourseRelationRepository(session).update_user_course_relation(course_id, user_id, user_course_relation.dict(exclude_unset=False))
+    except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
             detail=e.message,
