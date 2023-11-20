@@ -6,8 +6,7 @@ import axios from "axios";
 const ReviewsTab = ({ course_id }) => {
     const [courseReviews, setCourseReviews] = useState([]);
     const [users, setUsers] = useState([])
-
-
+    const [reviews, setReviews] = useState([])
 
     useEffect(() => {
         const courseApiUrl = `http://localhost:8000/course/${course_id}`;
@@ -22,19 +21,21 @@ const ReviewsTab = ({ course_id }) => {
             .then((response) => setUsers(response.data))
             .catch((error) => console.error('Error fetching user data: ', error));
 
+        console.log(courseReviews)
 
-    }, []); // Empty dependency array to execute the effect only once
+        const reviews = courseReviews.map(relation => {
+            const user = users.find(user => user.id === relation.user_id);
 
+            return {
+                name: user ? user.name : 'Usuario no encontrado',
+                comment: relation.review || 'Sin comentario',
+                rating: relation.rating || 0
+            };
+        });
 
-    const reviews = courseReviews.map(relation => {
-        const user = users.find(user => user.id === relation.user_id);
+        setReviews(reviews)
 
-        return {
-            name: user ? user.name : 'Usuario no encontrado',
-            comment: relation.review || 'Sin comentario',
-            rating: relation.rating || 0 // Si tienes un campo de rating en userCourseRelations
-        };
-    });
+    }, []);
 
     return (
         <Box sx={{ p: 3 }}>
