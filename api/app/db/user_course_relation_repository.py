@@ -49,3 +49,9 @@ class UserCourseRelationRepository:
             course_data_dict = dict(course_data)
 
             return CourseWithRelation(**course_data_dict, is_finished=is_finished)
+
+    def get_courses_by_user_id(self, user_id):
+        statement = select(UserCourseRelation).where(UserCourseRelation.user_id == user_id)
+        raw_user_course_relation = self.session.exec(statement)
+
+        return [user_course_relation.to_read_model() for user_course_relation in raw_user_course_relation]
