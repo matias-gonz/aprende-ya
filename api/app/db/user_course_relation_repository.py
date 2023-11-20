@@ -55,3 +55,21 @@ class UserCourseRelationRepository:
         raw_user_course_relation = self.session.exec(statement)
 
         return [user_course_relation.to_read_model() for user_course_relation in raw_user_course_relation]
+
+    def get_reviews_by_course_id(self, course_id):
+        statement = select(UserCourseRelation).where(UserCourseRelation.course_id == course_id)
+        raw_user_course_relation = self.session.exec(statement)
+
+        return [user_course_relation.to_read_model() for user_course_relation in raw_user_course_relation]
+
+    def update_user_course_relation(self, course_id, user_id, user_course_relation_data):
+        statement = select(UserCourseRelation).where(
+            UserCourseRelation.user_id == user_id and UserCourseRelation.course_id == course_id)
+        user_course_relation = self.session.exec(statement).first()
+        if user_course_relation:
+            for field, value in user_course_relation_data.items():
+                if value is not None:
+                    setattr(user_course_relation, field, value)
+            self.session.commit()
+            return user_course_relation.to_read_model()
+        return None
