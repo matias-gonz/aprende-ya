@@ -8,7 +8,9 @@ from sqlmodel import Session
 from starlette import status
 from web3 import Web3
 
+from app.questions import QuestionCreate, QuestionRead,QuestionEdit
 from app.db.certificate_repository import CertificateRepository
+from app.db.questions_repository import QuestionRepository
 from app.db.user_course_relation_repository import UserCourseRelationRepository
 from app.course import CourseCreate, CourseRead
 from app.db.course_repository import CourseRepository
@@ -200,3 +202,33 @@ def create_certificate(user_id: int, course_id: int, email: str):
         tx_hash = w3.eth.send_raw_transaction(signed_tx.rawTransaction)
         print(f'Transaction hash: {tx_hash.hex()}')
         return CertificateRepository(session).create(user_id, course_id, str(tx_hash.hex()))
+
+
+@app.post("/questions/", response_model=QuestionRead)
+def create_question(question: QuestionCreate):
+    with Session(engine) as session:
+        return QuestionRepository(session).create(question)
+
+@app.get("/questions/{course_id}", response_model=List[QuestionRead])
+def get_questions_for_course(course_id: int):
+    with Session(engine) as session:
+
+        return QuestionRepository(session).get_all_for_course(course_id)
+
+# Endpoint to get a specific question by ID
+@app.get("/question/{question_id}", response_model=QuestionRead)
+def get_question(question_id: int):
+    with Session(engine) as session:
+        question = QuestionRepository(session).get_by_id(question_id)
+        if question is None:
+            raise HTTPException(status_code=404, detail="Question not found")
+        return question
+
+# Endpoint to add or update an answer to a question
+@app.post("/questions/{question_id}/answer", response_model=QuestionRead)
+def add_or_update_answer(question_id: int, answer: QuestionEdit):
+    with Session(engine) as session:
+        question = QuestionRepository(session).add_or_update_answer(question_id, answer.answer)
+        if question is None:
+            raise HTTPException(status_code=404, detail="Question not found")
+        return question

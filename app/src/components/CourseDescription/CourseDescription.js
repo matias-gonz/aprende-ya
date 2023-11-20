@@ -5,6 +5,8 @@ import CourseMaterialsList from "./CourseMaterial/CourseMaterialsList";
 import ReviewTab from "./ReviewTab/ReviewTab";
 import './CourseDescription.css';
 import PaymentForm from "../PaymentForm/PaymentForm";
+import Forum from './Forum/Forum';
+
 import {useEffect, useState} from "react";
 import {useParams} from "react-router-dom";
 import axios from "axios";
@@ -159,7 +161,18 @@ const CourseDescription = ({isUserLoggedIn}) => {
 
             </TabPanel>
             <TabPanel value={tabValue} index={2}>
-
+            <Paper
+    style={{ paddingTop: '80px' }}
+    elevation={0}
+    sx={{
+      p: 2,
+      margin: 'auto',
+      maxWidth: '50%',
+      flexGrow: 1,
+    }}
+  >
+    <Forum courseId={course.id} isCourseCreator={ course.owner_id === Cookies.get('user_id')}  />
+  </Paper>
             </TabPanel>
 
             <Dialog
