@@ -9,7 +9,7 @@ const ReviewsTab = ({ course_id }) => {
     const [reviews, setReviews] = useState([])
 
     useEffect(() => {
-        const courseApiUrl = `http://localhost:8000/course/${course_id}`;
+        const courseApiUrl = `http://localhost:8000/course/${course_id}/reviews`;
 
         axios.get(courseApiUrl, {withCredentials: true})
             .then((response) => setCourseReviews(response.data))
@@ -20,22 +20,23 @@ const ReviewsTab = ({ course_id }) => {
         axios.get(userApiUrl, {withCredentials: true})
             .then((response) => setUsers(response.data))
             .catch((error) => console.error('Error fetching user data: ', error));
+    }, [course_id]);
 
-        console.log(courseReviews)
+    useEffect(() => {
+        if (users.length > 0 && courseReviews.length > 0) {
+            const reviews = courseReviews.map(relation => {
+                const user = users.find(user => user.id === relation.user_id);
 
-        const reviews = courseReviews.map(relation => {
-            const user = users.find(user => user.id === relation.user_id);
+                return {
+                    name: user ? user.name : 'Usuario no encontrado',
+                    comment: relation.review || 'Sin comentario',
+                    rating: relation.rating || 0
+                };
+            });
 
-            return {
-                name: user ? user.name : 'Usuario no encontrado',
-                comment: relation.review || 'Sin comentario',
-                rating: relation.rating || 0
-            };
-        });
-
-        setReviews(reviews)
-
-    }, []);
+            setReviews(reviews);
+        }
+    }, [users, courseReviews]);
 
     return (
         <Box sx={{ p: 3 }}>
