@@ -64,7 +64,7 @@ const Forum = ({ courseId, isCourseCreator }) => {
   return (
     <Box p={3}>
       <Typography variant="h4" gutterBottom>
-        Sección del Foro
+        Foro
       </Typography>
 
       <Box mb={2}>
