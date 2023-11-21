@@ -27,7 +27,7 @@ const CourseCreation = ({isUserLoggedIn}) => {
     const [courseData, setCourseData] = useState({
         title: '',
         description: '',
-        category: 0,
+        category: 1,
         image: '',
         exam: '[]',
         price: 0
@@ -81,6 +81,8 @@ const CourseCreation = ({isUserLoggedIn}) => {
         const {name, value} = e.target;
         setCourseData({...courseData, [name]: value});
     };
+
+    const categoryNames = ['0', 'Programación', 'Matemática', 'Marketing', 'Economía', 'Arte'];
 
     const getStepContent = (stepIndex) => {
         switch (stepIndex) {
@@ -201,7 +203,7 @@ const CourseCreation = ({isUserLoggedIn}) => {
                                 </Box>
                                 <Box style={{ padding: '20px' }}>
                                     <Typography variant="h3">Categoría</Typography>
-                                    <Typography variant="body1" style={{ paddingTop: '10px' }}>{courseData.category}</Typography>
+                                    <Typography variant="body1" style={{ paddingTop: '10px' }}>{categoryNames[courseData.category]}</Typography>
                                 </Box>
                                 <Box style={{ padding: '20px' }}>
                                     <Typography variant="h3">Materiales</Typography>
