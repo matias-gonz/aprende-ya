@@ -1,49 +1,120 @@
-import React, {useState, useEffect} from 'react';
-import {Container, TextField, Button, Typography} from '@mui/material';
-import {Link, Navigate, useNavigate} from 'react-router-dom';
-import NavBar from '../../components/NavBar/NavBar';
-import {Email, Lock, Person} from '@mui/icons-material';
-import Cookies from 'js-cookie';
-import axios from 'axios'; // Import Axios
+import React, { useState, useEffect,Component } from 'react';
 
-function UserProfile({isUserLoggedIn, handleLogoutState}) {
+
+import {
+  Container,
+  TextField,
+  Button,
+  Typography,
+  Tabs,
+  Tab,
+  Box,
+  Drawer,
+  List,
+  ListItem,
+  ListItemText,
+  Card,  
+  CardActionArea,
+  CardMedia,
+  CardContent,
+  Grid
+} from '@mui/material';
+import Rating from '@mui/material/Rating';
+
+import { useNavigate } from 'react-router-dom';
+import NavBar from '../../components/NavBar/NavBar';
+import { Email, Lock, Person } from '@mui/icons-material';
+import Cookies from 'js-cookie';
+import axios from 'axios';
+
+const CourseCard = ({ course }) => {
+  return (
+    <>
+      <Card>
+        <CardActionArea href={`/curso/${course.id}`}>
+          <CardMedia
+            component="img"
+            height="140"
+            image={course.image}
+            alt={course.title}
+          />
+          <CardContent>
+            <Typography gutterBottom variant="h5" component="div">
+              {course.title}
+            </Typography>
+            <Rating name="half-rating-read" value={course.rating || 0} precision={0.5} readOnly />
+            <Typography variant="body2">
+              {course.description}
+            </Typography>
+            <Typography variant="body1" className={"CourseList-price"}>
+              ${course.price}
+            </Typography>
+          </CardContent>
+        </CardActionArea>
+      </Card>
+    </>
+  );
+};
+
+
+const UserProfile = ({ isUserLoggedIn, handleLogoutState }) => {
   const [user, setUser] = useState({});
   const [isEditing, setIsEditing] = useState(false);
+  const [selectedTab, setSelectedTab] = useState(0);
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [purchasedCourses, setPurchasedCourses] = useState([]); // Nuevo estado para los cursos comprados
+  const [courses, setCourses] = useState([]);
 
   const navigate = useNavigate();
 
   useEffect(() => {
     const user_id = Cookies.get('user_id');
-    const apiUrl = `http://localhost:8000/user/${user_id}`;
+    const userApiUrl = `http://localhost:8000/user/${user_id}`;
 
-    axios.get(apiUrl, {withCredentials: true})
+    axios
+      .get(userApiUrl, { withCredentials: true })
       .then((response) => setUser(response.data))
       .catch((error) => console.error('Error fetching user data: ', error));
-  }, []); // Empty dependency array to execute the effect only once
 
-  const handleEdit = () => {
-    setIsEditing(true);
-  };
+    const coursesApiUrl = `http://localhost:8000/courses/${user_id}`;
+    axios
+      .get(coursesApiUrl)
+      .then((response) => setPurchasedCourses(response.data))
+      .catch((error) => console.error('Error fetching purchased courses: ', error));
+
+    axios
+      .get('http://localhost:8000/courses')
+      .then((response) => {
+        setCourses(response.data);
+      })
+      .catch((error) => {
+        console.error('Error fetching courses: ', error);
+      });
+  }, []);
+
 
   const handleSave = () => {
     setIsEditing(false);
     const user_id = Cookies.get('user_id');
     const apiUrl = `http://localhost:8000/user/${user_id}`;
 
-    axios.put(apiUrl, user, {withCredentials: true})
+    axios
+      .put(apiUrl, user, { withCredentials: true })
       .then((response) => {
         setUser(response.data);
         alert('User data has been saved successfully.');
       })
       .catch((error) => console.error('Error saving user data: ', error));
   };
+
   const handleDeleteUser = () => {
     const user_id = Cookies.get('user_id');
     const apiUrl = `http://localhost:8000/user/${user_id}`;
-    axios.delete(apiUrl, user, {withCredentials: true})
+    axios
+      .delete(apiUrl, { withCredentials: true })
       .then((response) => {
         if (window.confirm('Usuario borrado con éxito. ¿Desea redirigir a la página de inicio?')) {
-          return <Navigate to="/login"/>;
+          navigate('/');
         }
       })
       .catch((error) => {
@@ -55,62 +126,148 @@ function UserProfile({isUserLoggedIn, handleLogoutState}) {
   const handleLogout = () => {
     Cookies.remove('user_id');
     handleLogoutState();
-    navigate("/");
-  }
+    navigate('/');
+  };
+
+  const handleTabChange = (event, newValue) => {
+    setSelectedTab(newValue);
+  };
+  const handleEdit = () => {
+    setIsEditing(true);
+  };
+  const toggleDrawer = (open) => () => {
+    setDrawerOpen(open);
+  };
+  const filteredCourses = () => {
+    const userCourseIds = purchasedCourses.map(course => course.course_id);
+    const userCoursesSet = new Set(userCourseIds);
+    return courses.filter(course => userCoursesSet.has(course.id));
+  };
+  const drawerItems = [
+    { text: 'Mi Perfil', onClick: () => setSelectedTab(0) },
+    { text: 'Cursos Comprados', onClick: () => setSelectedTab(1) },
+    { text: 'Wish List', onClick: () => setSelectedTab(2) },
+  ];
 
   return (
     <div>
-      <NavBar isUserLoggedIn={isUserLoggedIn}/>
+      <NavBar isUserLoggedIn={isUserLoggedIn} />
+
       <Container maxWidth="sm" elevation={0}>
-        <div>
-          <Typography variant="h4" style={{fontFamily: 'arial', marginTop: '20px'}}> Mi Perfil </Typography>
-          <form>
-            <TextField
-              label="Nombre"
-              fullWidth
-              variant="outlined"
-              value={user.name}
-              onChange={(e) => setUser({...user, name: e.target.value})}
-              disabled={!isEditing}
-              style={{marginTop: '20px'}}
-              InputProps={{
-                startAdornment: <Person/>,
-              }}
-            />
-            <TextField
-              label="Email"
-              fullWidth
-              variant="outlined"
-              value={user.email}
-              onChange={(e) => setUser({...user, email: e.target.value})}
-              disabled={!isEditing}
-              style={{marginBottom: '20px', marginTop: '20px'}}
-              InputProps={{
-                startAdornment: <Email/>,
-              }}
-            />
-            <TextField
-              label="Contraseña"
-              fullWidth
-              variant="outlined"
-              value={user.password}
-              onChange={(e) => setUser({...user, password: e.target.value})}
-              disabled={!isEditing}
-              style={{marginBottom: '20px'}}
-              InputProps={{
-                startAdornment: <Lock/>,
-              }}
-            />
-            {isEditing ? (
-              <Button variant="contained" color="primary" onClick={handleSave}>
-                Guardar
-              </Button>
-            ) : (
-              <Button variant="contained" color="primary" onClick={handleEdit}>
-                Editar
-              </Button>
-            )}
-          </form>
+        <Box mt={4}>
+          <Button onClick={toggleDrawer(true)}>Abrir barra lateral</Button>
+          <Drawer anchor="left" open={drawerOpen} onClose={toggleDrawer(false)}>
+            <List>
+              {drawerItems.map((item, index) => (
+                <ListItem button key={index} onClick={item.onClick}>
+                  <ListItemText primary={item.text} />
+                </ListItem>
+              ))}
+            </List>
+          </Drawer>
+
+          <Tabs value={selectedTab} onChange={handleTabChange} textColor="black" indicatorColor="secondary">
+            <Tab label="Mi Perfil" />
+            <Tab label="Cursos Comprados" />
+            <Tab label="Wish List" />
+          </Tabs>
+
+          {selectedTab === 0 && (
+            <form>
+              <TextField
+                label="Nombre"
+                fullWidth
+                variant="outlined"
+                value={user.name}
+                onChange={(e) => setUser({ ...user, name: e.target.value })}
+                disabled={!isEditing}
+                style={{ marginTop: '20px' }}
+                InputProps={{
+                  startAdornment: <Person />,
+                }}
+              />
+              <TextField
+                label="Email"
+                fullWidth
+                variant="outlined"
+                value={user.email}
+                onChange={(e) => setUser({ ...user, email: e.target.value })}
+                disabled={!isEditing}
+                style={{ marginBottom: '20px', marginTop: '20px' }}
+                InputProps={{
+                  startAdornment: <Email />,
+                }}
+              />
+              <TextField
+                label="Contraseña"
+                fullWidth
+                variant="outlined"
+                value={user.password}
+                onChange={(e) => setUser({ ...user, password: e.target.value })}
+                disabled={!isEditing}
+                style={{ marginBottom: '20px' }}
+                InputProps={{
+                  startAdornment: <Lock />,
+                }}
+              />
+              {isEditing ? (
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={handleSave}
+                  style={{
+                    marginTop: '20px',
+                    color: 'white',
+                    backgroundColor: '#8B008B', // Violeta
+                    '&:hover': {
+                      backgroundColor: '#4B0082', // Violeta más oscuro al pasar el mouse
+                    },
+                  }}
+                >
+                  Guardar
+                </Button>
+              ) : (
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={handleEdit}
+                  style={{
+                    marginTop: '20px',
+                    color: 'white',
+                    backgroundColor: '#8B008B', // Violeta
+                    '&:hover': {
+                      backgroundColor: '#4B0082', // Violeta más oscuro al pasar el mouse
+                    },
+                  }}
+                >
+                  Editar
+                </Button>
+              )}
+            </form>
+          )}
+          {selectedTab === 1 && (
+            <div>
+              <Typography variant="h5" style={{ marginTop: '20px' }}>
+                Cursos Comprados
+              </Typography>
+              <Grid container spacing={5} style={{ marginTop: '10px' }}>
+              {filteredCourses().map(course => (
+        <Grid item xs={12} sm={6} md={4} key={course.id}>
+          <CourseCard course={course} />
+        </Grid>
+      ))}
+              </Grid>
+            </div>
+          )}
+          {selectedTab === 2 && (
+            <Typography variant="h5" style={{ marginTop: '20px' }}>
+              Wish List
+              {/* Mostrar la lista de la Wish List */}
+            </Typography>
+          )}
+        </Box>
+        
+        {selectedTab === 0 && (
           <Button
             variant="contained"
             color="primary"
@@ -118,34 +275,39 @@ function UserProfile({isUserLoggedIn, handleLogoutState}) {
             style={{
               marginTop: '20px',
               color: 'white',
+              backgroundColor: '#8B008B', // Violeta
               '&:hover': {
-                backgroundColor: 'darkred',
+                backgroundColor: '#4B0082', // Violeta más oscuro al pasar el mouse
               },
             }}
           >
             Cerrar Sesión
           </Button>
-        </div>
-        <div>
-          <Button
-            variant="contained"
-            color="secondary"
-            onClick={handleDeleteUser}
-            style={{
-              marginTop: '20px',
-              backgroundColor: 'red',
-              color: 'white',
-              '&:hover': {
-                backgroundColor: 'darkred',
-              },
-            }}
-          >
-            Eliminar usuario
-          </Button>
-        </div>
+        )}
+        {selectedTab === 0 && (
+          <Box>
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={handleDeleteUser}
+              style={{
+                marginTop: '20px',
+                backgroundColor: '#8B008B', // Violeta
+                '&:hover': {
+                  backgroundColor: '#4B0082', // Violeta más oscuro al pasar el mouse
+                },
+                color: 'white'
+              }}
+            >
+              Eliminar usuario
+            </Button>
+          </Box>
+        )}
+
+
       </Container>
     </div>
   );
-}
+};
 
 export default UserProfile;
