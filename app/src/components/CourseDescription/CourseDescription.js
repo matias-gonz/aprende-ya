@@ -134,7 +134,7 @@ const CourseDescription = ({isUserLoggedIn}) => {
                 </Paper>
 
                 <Paper
-                    style={{paddingTop: '80px'}}
+                    style={{paddingTop: '20px'}}
                     elevation={0}
                     sx={{
                         p: 2,
@@ -143,7 +143,7 @@ const CourseDescription = ({isUserLoggedIn}) => {
                         flexGrow: 1,
                     }}
                 >
-                    <CourseMaterialsList/>
+                    <CourseMaterialsList courseSections={course.sections} />
                 </Paper>
             </TabPanel>
             <TabPanel value={tabValue} index={1}>

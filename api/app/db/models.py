@@ -1,5 +1,5 @@
-from typing import Optional
-from sqlmodel import SQLModel, Field
+from typing import Optional, List
+from sqlmodel import SQLModel, Field, Relationship
 
 from app.certificate import CertificateRead
 from app.db.exceptions import EmailTakenException, WrongCredentialsException
@@ -29,6 +29,24 @@ class User(SQLModel, table=True):
         return User(email=user.email, name=user.name, password=user.password)
 
 
+class Video(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    title: str
+    description: str
+    duration: int
+    link: str
+    section_id: int = Field(foreign_key="section.id")
+    section: "Section" = Relationship(back_populates="videos")
+
+
+class Section(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    title: str
+    course_id: int = Field(foreign_key="course.id")
+    course: "Course" = Relationship(back_populates="sections")
+    videos: List[Video] = Relationship(back_populates="section")
+
+
 class Course(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     title: str
@@ -39,6 +57,7 @@ class Course(SQLModel, table=True):
     owner_id: int
     price: int
     exam: str
+    sections: List[Section] = Relationship(back_populates="course")
 
     def to_read_model(self) -> CourseRead:
         return CourseRead(id=self.id,

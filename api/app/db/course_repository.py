@@ -3,7 +3,7 @@ from typing import List, Optional
 from sqlmodel import select, Session
 
 from app.db.models import Course
-from app.course import CourseRead, CourseCreate
+from app.course import CourseRead, CourseCreate, Section, Video
 
 
 class CourseRepository:
@@ -17,11 +17,37 @@ class CourseRepository:
         return [course.to_read_model() for course in raw_courses]
 
     def create(self, course: CourseCreate, user_id: int) -> CourseRead:
-        course = Course.from_create_model(course, user_id)
-        self.session.add(course)
-        self.session.commit()
-
-        return course.to_read_model()
+        new_course = Course(
+            title=course.title,
+            category=course.category,
+            content=course.content,
+            image=course.image,
+            price=course.price,
+            exam=course.exam,
+            description=course.description,
+            owner_id=user_id,
+            sections=[
+                Section(
+                    title=section.title,
+                    videos=[
+                        Video(
+                            title=video.title,
+                            description=video.description,
+                            duration=video.duration,
+                            link=video.link
+                        ) for video in section.videos
+                    ]
+                ) for section in course.sections
+            ] if course.sections else None
+        )
+        self.session.add(new_course)
+        try:
+            self.session.commit()
+            return new_course.to_read_model()
+        except Exception as e:
+            self.session.rollback()
+            # Handle exception (e.g., log it, convert to HTTPException, etc.)
+            raise e
 
     def get_by_title(self, title: str) -> Optional[CourseRead]:
         statement = select(Course).where(Course.title == title)
