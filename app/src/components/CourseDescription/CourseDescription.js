@@ -14,6 +14,7 @@ import axios from "axios";
 import CourseExam from "../CourseExam/CourseExam";
 import Cookies from "js-cookie";
 import ReviewModal from "../ReviewModal/ReviewModal";
+import HomeIcon from '@mui/icons-material/Home';
 
 const TabPanel = (props) => {
   const {children, value, index, ...other} = props;
@@ -131,16 +132,7 @@ const CourseDescription = ({isUserLoggedIn}) => {
   return (
     <div>
       <NavBar isUserLoggedIn={isUserLoggedIn}/>
-      <Paper
-        style={{paddingTop: '80px'}}
-        elevation={0}
-        sx={{
-          p: 2,
-          margin: 'auto',
-          maxWidth: '40%',
-          flexGrow: 1,
-        }}
-      >
+      <Paper elevation={0} sx={{ p: 2, margin: 'auto', maxWidth: '90%', flexGrow: 1 }}>
         <Grid container spacing={2} alignItems="center" justify="center">
           <Grid item xs={12} sm>
             <img
@@ -201,15 +193,8 @@ const CourseDescription = ({isUserLoggedIn}) => {
       </Paper>
 
 
-      <Tabs
-        value={tabValue}
-        onChange={handleChange}
-        textColor="secondary"
-        indicatorColor="secondary"
-        aria-label="secondary tabs example"
-        centered
-      >
-        <Tab label="Curso"/>
+      <Tabs value={tabValue} onChange={handleChange} textColor="secondary" indicatorColor="secondary" centered>
+        <Tab icon={<HomeIcon />} label="Curso"/>
         <Tab label="Reseñas"/>
         <Tab label="Foro"/>
         {isEnrolled ? <Tab label="Examen"/> : null}
