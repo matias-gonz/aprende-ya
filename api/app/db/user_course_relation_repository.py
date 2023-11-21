@@ -3,13 +3,13 @@ from typing import List, Optional
 from sqlmodel import select, Session
 
 from app.db.models import UserCourseRelation
-
+from datetime import datetime
 from app.db.models import Course
 
 
 class CourseWithRelation:
     def __init__(self, id: int, title: str, description: str, category: int, content: str, image: str, price: int,
-                 owner_id: int, exam: str, is_finished: Optional[bool] = None):
+                 owner_id: int, exam: str, is_finished: Optional[bool] = None, purchase_date : Optional[datetime]=None):
         self.id = id
         self.title = title
         self.description = description
@@ -20,6 +20,7 @@ class CourseWithRelation:
         self.owner_id = owner_id
         self.exam = exam
         self.is_finished = is_finished
+        self.purchase_date = purchase_date
 
 
 class UserCourseRelationRepository:
@@ -42,20 +43,22 @@ class UserCourseRelationRepository:
             user_course_relation = self.session.exec(statement).first()
 
             is_finished = None
+            purchase_date = None
             if user_course_relation:
                 is_finished = user_course_relation.is_finished
+                purchase_date = user_course_relation.purchase_date
 
             # Convertir course_data a un diccionario
             course_data_dict = dict(course_data)
 
-            return CourseWithRelation(**course_data_dict, is_finished=is_finished)
+            return CourseWithRelation(**course_data_dict, is_finished=is_finished, purchase_date=purchase_date)
 
     def get_courses_by_user_id(self, user_id):
         statement = select(UserCourseRelation).where(UserCourseRelation.user_id == user_id)
         raw_user_course_relation = self.session.exec(statement)
 
         return [user_course_relation.to_read_model() for user_course_relation in raw_user_course_relation]
-    
+
     def get_reviews_by_course_id(self, course_id):
         statement = select(UserCourseRelation).where(UserCourseRelation.course_id == course_id)
         raw_user_course_relation = self.session.exec(statement)

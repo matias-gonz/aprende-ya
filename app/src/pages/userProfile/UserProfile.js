@@ -63,6 +63,8 @@ const UserProfile = ({ isUserLoggedIn, handleLogoutState }) => {
   const [selectedTab, setSelectedTab] = useState(0);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [purchasedCourses, setPurchasedCourses] = useState([]); // Nuevo estado para los cursos comprados
+  const [wishlistedCourses, setWishlistedCourses] = useState([]); // Nuevo estado para los cursos comprados
+
   const [courses, setCourses] = useState([]);
 
   const navigate = useNavigate();
@@ -82,8 +84,14 @@ const UserProfile = ({ isUserLoggedIn, handleLogoutState }) => {
       .then((response) => setPurchasedCourses(response.data))
       .catch((error) => console.error('Error fetching purchased courses: ', error));
 
+    const wishlistcoursesApiUrl = `http://localhost:8000/wishlist/user/${user_id}`;
     axios
-      .get('http://localhost:8000/courses')
+      .get(wishlistcoursesApiUrl)
+      .then((response) => setWishlistedCourses(response.data))
+      .catch((error) => console.error('Error fetching purchased courses: ', error));
+
+    axios
+    .get('http://localhost:8000/courses')
       .then((response) => {
         setCourses(response.data);
       })
@@ -140,6 +148,11 @@ const UserProfile = ({ isUserLoggedIn, handleLogoutState }) => {
   };
   const filteredCourses = () => {
     const userCourseIds = purchasedCourses.map(course => course.course_id);
+    const userCoursesSet = new Set(userCourseIds);
+    return courses.filter(course => userCoursesSet.has(course.id));
+  };
+  const filteredWishedCourses = () => {
+    const userCourseIds = wishlistedCourses.map(course => course.course_id);
     const userCoursesSet = new Set(userCourseIds);
     return courses.filter(course => userCoursesSet.has(course.id));
   };
@@ -260,11 +273,19 @@ const UserProfile = ({ isUserLoggedIn, handleLogoutState }) => {
             </div>
           )}
           {selectedTab === 2 && (
-            <Typography variant="h5" style={{ marginTop: '20px' }}>
-              Wish List
-              {/* Mostrar la lista de la Wish List */}
-            </Typography>
+            <div>
+              <Typography variant="h5" style={{ marginTop: '20px' }}>
+              Wish List              </Typography>
+              <Grid container spacing={5} style={{ marginTop: '10px' }}>
+              {filteredWishedCourses().map(course => (
+        <Grid item xs={12} sm={6} md={4} key={course.id}>
+          <CourseCard course={course} />
+        </Grid>
+      ))}
+              </Grid>
+            </div>
           )}
+          
         </Box>
         
         {selectedTab === 0 && (

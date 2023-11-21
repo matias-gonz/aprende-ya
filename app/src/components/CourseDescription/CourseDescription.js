@@ -36,6 +36,7 @@ const CourseDescription = ({isUserLoggedIn}) => {
   const [examDialog, setExamDialog] = React.useState(false)
   const [reviewModal, setReviewModal] = React.useState(false)
   const [isEnrolled, setIsEnrolled] = React.useState(false)
+  const [isInWishlist, setIsInWishlist] = React.useState(false);
 
   const {course_id} = useParams();
   const user_id = Cookies.get('user_id');
@@ -49,7 +50,7 @@ const CourseDescription = ({isUserLoggedIn}) => {
 
     axios.get(`http://localhost:8000/course/${course_id}/user/${user_id}`, {withCredentials: true})
       .then((response) => {
-        if (response.data['is_finished'] !== null) {
+        if (response.data['purchase_date'] !== null) {
           setIsEnrolled(true);
         }
       }).catch((error) => {
@@ -66,6 +67,44 @@ const CourseDescription = ({isUserLoggedIn}) => {
     setExamDialog(false);
   }
 
+  const handleAddToWishlist = () => {
+    axios.post(`http://localhost:8000/wishlist`, {
+      course_id: course.id,
+      user_id: user_id,
+    })
+    .then(response => {
+      if (response.status === 200) {
+        setIsInWishlist(true);
+      } else {
+        console.error('Error al agregar a la lista de deseos');
+      }
+    })
+    .catch(error => {
+      console.error('Error de red:', error);
+    });
+  };
+  
+  const handleRemoveFromWishlist = () => {
+    axios.delete(`http://localhost:8000/wishlist`, {
+      data: {
+        course_id: course.id,
+        user_id: user_id,
+      },
+    })
+    .then(response => {
+      if (response.status === 200) {
+        setIsInWishlist(false);
+      } else {
+        console.error('Error al quitar de la lista de deseos');
+      }
+    })
+    .catch(error => {
+      console.error('Error de red:', error);
+    });
+  };
+  
+
+  
   const handleChange = (event, newValue) => {
     setTabValue(newValue);
   };
@@ -108,11 +147,35 @@ const CourseDescription = ({isUserLoggedIn}) => {
               </Typography>
 
               {
-                isEnrolled ? null :
-                  <Button className={"BuyButton"} variant="contained" color="primary" onClick={handleBuyClick}>
-                    Comprar
-                  </Button>
-              }
+  !isEnrolled && (course.owner_id !== user_id) && (
+    <div>
+      <Button className={"BuyButton"} variant="contained" color="primary" onClick={handleBuyClick}>
+        Comprar
+      </Button>
+
+      {isInWishlist ? (
+        <Button
+          className={"BuyButton"}
+          variant="contained"
+          color="primary"
+          onClick={handleRemoveFromWishlist}
+        >
+          Quitar de la Wish List
+        </Button>
+      ) : (
+        <Button
+          className={"BuyButton"}
+          variant="contained"
+          color="primary"
+          onClick={handleAddToWishlist}
+        >
+          Agregar a la Wish List
+        </Button>
+      )}
+    </div>
+  )
+}
+
             </Paper>
           </Grid>
         </Grid>

@@ -1,6 +1,6 @@
 from typing import Optional
 from sqlmodel import SQLModel, Field
-
+from datetime import datetime
 from app.certificate import CertificateRead
 from app.db.exceptions import EmailTakenException, WrongCredentialsException
 from app.user import UserRead, UserCreate
@@ -70,18 +70,21 @@ class UserCourseRelation(SQLModel, table=True):
     user_id: int
     course_id: int
     is_finished: bool = False
+    purchase_date: datetime = None
+
     review: Optional[str] = None
     rating: Optional[int] = None
 
     @classmethod
     def from_create_model(cls, user_id: int, course_id: int):
-        return UserCourseRelation(user_id=user_id, course_id=course_id)
+        return UserCourseRelation(user_id=user_id, course_id=course_id, purchase_date=datetime.now())
 
     def to_read_model(self) -> UserCourseRelationRead:
         return UserCourseRelation(
             user_id=self.user_id,
             course_id=self.course_id,
             is_finished=self.is_finished,
+            purchase_date=self.purchase_date,
             review=self.review,
             rating=self.rating)
 
@@ -116,3 +119,9 @@ class Question(SQLModel, table=True):
 class QuestionCreate(SQLModel):
     text: str
 
+
+
+class Wishlist(SQLModel, table=True):
+    id: int = Field(primary_key=True, index=True)
+    user_id: int
+    course_id: int

@@ -8,12 +8,14 @@ from sqlmodel import Session
 from starlette import status
 from web3 import Web3
 
+from app.wishlists import WishlistCreate , WishlistRead
 from app.questions import QuestionCreate, QuestionRead,QuestionEdit
 from app.db.certificate_repository import CertificateRepository
 from app.db.questions_repository import QuestionRepository
 from app.db.user_course_relation_repository import UserCourseRelationRepository
 from app.course import CourseCreate, CourseRead
 from app.db.course_repository import CourseRepository
+from app.db.whishlist_repository import WishlistRepository
 from app.db.database import create_db_and_tables, engine
 from app.db.exceptions import EmailTakenException, CourseNameTakenException
 from app.db.user_repository import UserRepository
@@ -255,3 +257,26 @@ def add_or_update_answer(question_id: int, answer: QuestionEdit):
         if question is None:
             raise HTTPException(status_code=404, detail="Question not found")
         return question
+
+
+
+@app.post("/wishlist", response_model=WishlistRead)
+async def add_to_wishlist(wishlist_data: WishlistCreate):
+    with Session(engine) as session:
+        wishlist_repo = WishlistRepository(session)
+        wishlist_item = wishlist_repo.add_to_wishlist(wishlist_data)
+        return wishlist_item
+
+@app.delete("/wishlist", response_model=WishlistRead)
+async def delete_from_wishlist(wishlist_data: WishlistCreate):
+    with Session(engine) as session:
+        wishlist_repo = WishlistRepository(session)
+        wishlist_item = wishlist_repo.delete_from_wishlist(wishlist_data.user_id,wishlist_data.course_id)
+        return wishlist_item
+
+@app.get("/wishlist/user/{user_id}", response_model=list[WishlistRead])
+async def get_user_wishlist(user_id: int):
+    with Session(engine) as session:
+        wishlist_repo = WishlistRepository(session)
+        user_wishlist = wishlist_repo.get_all_for_user(user_id)
+        return user_wishlist
