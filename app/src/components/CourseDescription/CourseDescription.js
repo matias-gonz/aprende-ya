@@ -15,6 +15,9 @@ import CourseExam from "../CourseExam/CourseExam";
 import Cookies from "js-cookie";
 import ReviewModal from "../ReviewModal/ReviewModal";
 import HomeIcon from '@mui/icons-material/Home';
+import StarIcon from '@mui/icons-material/Star';
+import LiveHelpIcon from '@mui/icons-material/LiveHelp';
+import FormatListNumberedRtlIcon from '@mui/icons-material/FormatListNumberedRtl';
 
 const TabPanel = (props) => {
   const {children, value, index, ...other} = props;
@@ -35,7 +38,6 @@ const CourseDescription = ({isUserLoggedIn}) => {
   const [tabValue, setTabValue] = React.useState(0);
   const [buyDialog, setBuyDialog] = React.useState(false)
   const [course, setCourse] = useState({});
-  const [examDialog, setExamDialog] = React.useState(false)
   const [reviewModal, setReviewModal] = React.useState(false)
   const [isEnrolled, setIsEnrolled] = React.useState(false)
   const [isInWishlist, setIsInWishlist] = React.useState(false);
@@ -195,9 +197,9 @@ const CourseDescription = ({isUserLoggedIn}) => {
 
       <Tabs value={tabValue} onChange={handleChange} textColor="secondary" indicatorColor="secondary" centered>
         <Tab icon={<HomeIcon />} label="Curso"/>
-        <Tab label="Reseñas"/>
-        <Tab label="Foro"/>
-        {isEnrolled ? <Tab label="Examen"/> : null}
+        <Tab icon={<StarIcon />} label="Reseñas"/>
+        <Tab icon={<LiveHelpIcon />} label="Foro"/>
+        {isEnrolled ? <Tab icon={<FormatListNumberedRtlIcon/>} label="Examen"/> : null}
       </Tabs>
 
       <TabPanel value={tabValue} index={0}>
