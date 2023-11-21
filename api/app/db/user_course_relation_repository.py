@@ -1,6 +1,6 @@
 from typing import List, Optional
 
-from sqlmodel import select, Session
+from sqlmodel import select, Session, func
 
 from app.db.models import UserCourseRelation
 from datetime import datetime
@@ -75,3 +75,13 @@ class UserCourseRelationRepository:
             self.session.commit()
             return user_course_relation.to_read_model()
         return None
+
+
+    def get_total_users_by_course_id(self, course_id):
+        total_users = 0
+        statement = select(UserCourseRelation).where(UserCourseRelation.course_id == course_id)
+        total_users_list = self.session.exec(statement)
+        for _ in total_users_list:
+            total_users +=1
+        
+        return total_users

@@ -134,10 +134,21 @@ async def get_course(course_id: str) -> CourseRead:
     try:
         with Session(engine) as session:
             return CourseRepository(session).get_course_by_id(course_id)
-    except EmailTakenException as e:
+    except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
             detail=e.message,
+        )
+
+@app.delete("/course/{course_id}", status_code=status.HTTP_200_OK)
+async def get_course(course_id: str) -> dict:
+    try:
+        with Session(engine) as session:
+            return {"deleted" : CourseRepository(session).delete_course(course_id)}
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="No puede borrar el curso con personas inscriptas",
         )
 
 
@@ -146,7 +157,7 @@ async def get_course_information_by_user_id(course_id: int, user_id: int):
     try:
         with Session(engine) as session:
             return UserCourseRelationRepository(session).get_course_relation_by_user_id(course_id, user_id)
-    except EmailTakenException as e:
+    except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
             detail=e.message,
@@ -157,7 +168,7 @@ async def get_courses_by_user_id(user_id: int):
     try:
         with Session(engine) as session:
             return UserCourseRelationRepository(session).get_courses_by_user_id(user_id)
-    except EmailTakenException as e:
+    except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
             detail=e.message,
@@ -168,7 +179,7 @@ async def get_courses_by_user_id(course_id: int):
     try:
         with Session(engine) as session:
             return UserCourseRelationRepository(session).get_reviews_by_course_id(course_id)
-    except EmailTakenException as e:
+    except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
             detail=e.message,

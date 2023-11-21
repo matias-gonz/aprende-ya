@@ -6,6 +6,7 @@ import ReviewTab from "./ReviewTab/ReviewTab";
 import './CourseDescription.css';
 import PaymentForm from "../PaymentForm/PaymentForm";
 import Forum from './Forum/Forum';
+import {useNavigate} from "react-router-dom";
 
 import {useEffect, useState} from "react";
 import {useParams} from "react-router-dom";
@@ -40,6 +41,7 @@ const CourseDescription = ({isUserLoggedIn}) => {
 
   const {course_id} = useParams();
   const user_id = Cookies.get('user_id');
+  const navigate = useNavigate();
 
   useEffect(() => {
     const apiUrl = `http://localhost:8000/course/${course_id}`;
@@ -99,7 +101,23 @@ const CourseDescription = ({isUserLoggedIn}) => {
     });
   };
   
-
+  const handleDeleteCourse = () => {
+    axios.delete(`http://localhost:8000/course/${course.id}`, {}
+    )
+    .then(response => {
+      if (response.status === 200) {
+        alert("Curso eliminado")
+        navigate('/');
+          } else {
+        alert("No puede eliminar cursos con estudiantes")
+        console.error('Error al quitar de la lista de cursos');
+      }
+    })
+    .catch(error => {
+      alert("No puede eliminar cursos con estudiantes")
+      console.error('Error de red:', error);
+    });
+  };
   
   const handleChange = (event, newValue) => {
     setTabValue(newValue);
@@ -141,7 +159,6 @@ const CourseDescription = ({isUserLoggedIn}) => {
               <Typography variant="h5" gutterBottom>
                 ${course.price}
               </Typography>
-
               {
   !isEnrolled && (course.owner_id !== user_id) && (
     <div>
@@ -171,6 +188,12 @@ const CourseDescription = ({isUserLoggedIn}) => {
     </div>
   )
 }
+{course.owner_id !== user_id ? null : (
+  <Button className={"BuyButton"} variant="contained" color="primary" onClick={handleDeleteCourse}>
+    Eliminar Curso
+  </Button>
+)}
+
 
             </Paper>
           </Grid>

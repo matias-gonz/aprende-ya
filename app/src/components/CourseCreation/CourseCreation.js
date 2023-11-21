@@ -363,7 +363,7 @@ const CourseCreation = ({isUserLoggedIn}) => {
                 {activeStep === steps.length ? (
                     <Container>
                         <Typography variant="h5">¡Curso creado!</Typography>
-                        {/* Aquí puedes mostrar un resumen del curso */}
+                        
                     </Container>
                 ) : (
                     <Container>

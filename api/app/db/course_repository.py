@@ -4,6 +4,7 @@ from sqlmodel import select, Session
 
 from app.db.models import Course, Section, Video
 from app.course import CourseRead, CourseCreate, SectionRead, SectionCreate, VideoRead, VideoCreate
+from app.db.user_course_relation_repository import UserCourseRelationRepository
 
 
 class CourseRepository:
@@ -81,3 +82,18 @@ class CourseRepository:
         except Exception as e:
             print(f"Error retrieving courses: {e}")
             return None  # O lanza una excepción según tus necesidades
+   
+
+    def delete_course(self, course_id: int) -> Optional[bool]:
+        statement = select(Course).where(Course.id == course_id)
+        course = self.session.exec(statement).first()
+        total_users =UserCourseRelationRepository(self.session).get_total_users_by_course_id(course_id)
+        print(total_users)
+        print(course)
+
+        if course and int(total_users)==0:
+            self.session.delete(course)
+            self.session.commit()
+            return True
+        
+        raise ValueError("No puede borrar cursos con personas inscriptas o el curso no existe")
