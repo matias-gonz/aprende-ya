@@ -4,7 +4,6 @@ import Cards from 'react-credit-cards-2';
 import 'react-credit-cards-2/dist/es/styles-compiled.css';
 import {green, red} from "@mui/material/colors";
 import LoadingButton from "@mui/lab/LoadingButton";
-import NavBar from "../NavBar/NavBar";
 import Cookies from "js-cookie";
 import axios from "axios";
 
@@ -63,7 +62,6 @@ function PaymentForm({ course_id, price }) {
 
     return (
         <div>
-            <NavBar/>
             <Container maxWidth="sm" elevation={0}>
                 <div style={{ position: 'relative', paddingTop: '20px' }}>
                     <div style={{ position: 'relative', zIndex: 1 }}>
