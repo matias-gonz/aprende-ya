@@ -4,8 +4,10 @@ from sqlmodel import SQLModel, Field, Relationship
 from app.certificate import CertificateRead
 from app.db.exceptions import EmailTakenException, WrongCredentialsException
 from app.user import UserRead, UserCreate
+from app.questions import QuestionCreate, QuestionRead
+from app.course import CourseRead, CourseCreate, SectionRead, VideoRead
 
-from app.course import CourseRead, CourseCreate
+from app.user_course_relation import UserCourseRelationRead
 
 
 class User(SQLModel, table=True):
@@ -52,7 +54,6 @@ class Course(SQLModel, table=True):
     title: str
     description: str
     category: int
-    content: str
     image: str
     owner_id: int
     price: int
@@ -60,25 +61,43 @@ class Course(SQLModel, table=True):
     sections: List[Section] = Relationship(back_populates="course")
 
     def to_read_model(self) -> CourseRead:
+        sections = [
+            SectionRead(id=section.id,
+                        title=section.title,
+                        videos=[VideoRead(id=video.id,
+                                          title=video.title,
+                                          description=video.description,
+                                          duration=video.duration,
+                                          link=video.link) for video in section.videos])
+            for section in self.sections
+        ]
         return CourseRead(id=self.id,
                           title=self.title,
                           description=self.description,
                           category=self.category,
-                          content=self.content,
                           image=self.image,
                           price=self.price,
                           owner_id=self.owner_id,
+                          sections=sections,
                           exam=self.exam)
 
     @classmethod
     def from_create_model(cls, course: CourseCreate, user_id: int):
+        sections = [
+            Section(title=section.title,
+                    videos=[Video(title=video.title,
+                                    description=video.description,
+                                    duration=video.duration,
+                                    link=video.link) for video in section.videos])
+            for section in course.sections
+        ]
         return Course(title=course.title,
                       description=course.description,
                       category=course.category,
-                      content='',
                       image=course.image,
                       price=course.price,
                       owner_id=user_id,
+                      sections=sections,
                       exam=course.exam)
 
 
@@ -87,13 +106,20 @@ class UserCourseRelation(SQLModel, table=True):
     user_id: int
     course_id: int
     is_finished: bool = False
+    review: Optional[str]
+    rating: Optional[int]
 
     @classmethod
     def from_create_model(cls, user_id: int, course_id: int):
         return UserCourseRelation(user_id=user_id, course_id=course_id)
 
-    def to_read_model(self) -> CourseRead:
-        return UserCourseRelation(user_id=self.user_id, course_id=self.course_id, is_finished=self.is_finished)
+    def to_read_model(self) -> UserCourseRelationRead:
+        return UserCourseRelation(
+            user_id=self.user_id,
+            course_id=self.course_id,
+            is_finished=self.is_finished,
+            review=self.review,
+            rating=self.rating)
 
 
 class Certificate(SQLModel, table=True):
@@ -108,3 +134,21 @@ class Certificate(SQLModel, table=True):
 
     def to_read_model(self) -> CertificateRead:
         return CertificateRead(id=self.id, user_id=self.user_id, course_id=self.course_id, hash=self.hash)
+
+
+class Question(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    course_id: int
+    text: str
+    answer: str = ""
+
+    def to_read_model(self) -> QuestionRead:
+        return QuestionRead(id=self.id, course_id=self.course_id, text=self.text, answer=self.answer)
+
+    @classmethod
+    def from_create_model(cls, question: QuestionCreate):
+        return Question(course_id=question.course_id, text=question.text, answer="")
+
+class QuestionCreate(SQLModel):
+    text: str
+

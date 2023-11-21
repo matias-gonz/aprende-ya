@@ -9,7 +9,7 @@ import {
     Container,
     Paper,
     ListItemText,
-    ListItem, List, IconButton, ListItemSecondaryAction, InputAdornment, Select, MenuItem
+    ListItem, List, IconButton, ListItemSecondaryAction, InputAdornment, Select, MenuItem, Grid, Box
 } from '@mui/material';
 import axios from "axios";
 import NavBar from "../NavBar/NavBar";
@@ -18,18 +18,20 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import MultipleChoiceBuilder from "../MultipleChoiceBuilder/MultipleChoiceBuilder";
 
-const steps = ['Título', 'Descripción', 'Contenido', 'Imagen', 'Examen'];
+const steps = ['Título', 'Descripción', 'Contenido', 'Imagen', 'Examen', 'Revisión'];
 
 const CourseCreation = ({isUserLoggedIn}) => {
     const navigate = useNavigate();
 
+    const [sections, setSections] = useState([]); // State to manage sections and videos
     const [activeStep, setActiveStep] = useState(0);
     const [courseData, setCourseData] = useState({
         title: '',
         description: '',
-        category: 0,
+        category: 1,
         image: '',
-        exam: '',
+        sections: [],
+        exam: '[]',
         price: 0
     });
     const [materialLink, setMaterialLink] = useState('');
@@ -51,11 +53,15 @@ const CourseCreation = ({isUserLoggedIn}) => {
     const handleSubmit = () => {
         const apiUrl = 'http://localhost:8000/course';
 
-        setCourseData({ ...courseData, exam: JSON.stringify(exam) })
-        console.log(courseData)
+        const dataToSend = {
+            ...courseData,
+            exam: JSON.stringify(exam),
+            sections: sections // Ensure this is the updated sections state
+        };
+        console.log(dataToSend)
 
         axios
-            .post(apiUrl, courseData, {withCredentials: true})
+            .post(apiUrl, dataToSend, {withCredentials: true})
             .then((response) => {
                 console.log('Create course:', response.data);
                 navigate('/');
@@ -81,6 +87,54 @@ const CourseCreation = ({isUserLoggedIn}) => {
         const {name, value} = e.target;
         setCourseData({...courseData, [name]: value});
     };
+
+    const handleAddSection = () => {
+        setSections([...sections, { title: '', videos: [] }]);
+    };
+
+    const handleDeleteSection = (sectionIndex) => {
+        const updatedSections = sections.filter((_, index) => index !== sectionIndex);
+        setSections(updatedSections);
+    };
+
+    const handleAddVideo = (sectionIndex) => {
+        const newVideo = { title: '', description: '', duration: 0, link: '' };
+        const updatedSections = sections.map((section, index) => {
+            if (index === sectionIndex) {
+                return { ...section, videos: [...section.videos, newVideo] };
+            }
+            return section;
+        });
+        setSections(updatedSections);
+    };
+
+    const handleDeleteVideo = (sectionIndex, videoIndex) => {
+        const updatedSections = sections.map((section, sIndex) => {
+            if (sIndex === sectionIndex) {
+                return { ...section, videos: section.videos.filter((_, vIndex) => vIndex !== videoIndex) };
+            }
+            return section;
+        });
+        setSections(updatedSections);
+    };
+
+    const handleVideoInputChange = (sectionIndex, videoIndex, field, value) => {
+        const updatedSections = sections.map((section, sIndex) => {
+            if (sIndex === sectionIndex) {
+                const updatedVideos = section.videos.map((video, vIndex) => {
+                    if (vIndex === videoIndex) {
+                        return { ...video, [field]: value };
+                    }
+                    return video;
+                });
+                return { ...section, videos: updatedVideos };
+            }
+            return section;
+        });
+        setSections(updatedSections);
+    };
+
+    const categoryNames = ['0', 'Programación', 'Matemática', 'Marketing', 'Economía', 'Arte'];
 
     const getStepContent = (stepIndex) => {
         switch (stepIndex) {
@@ -113,11 +167,11 @@ const CourseCreation = ({isUserLoggedIn}) => {
                             onChange={handleInputChange}
                             style={{marginTop: '20px'}}
                         >
-                            <MenuItem value={0}>Programación</MenuItem>
-                            <MenuItem value={1}>Matemática</MenuItem>
-                            <MenuItem value={2}>Marketing</MenuItem>
-                            <MenuItem value={3}>Economía</MenuItem>
-                            <MenuItem value={4}>Arte</MenuItem>
+                            <MenuItem value={1}>Programación</MenuItem>
+                            <MenuItem value={2}>Matemática</MenuItem>
+                            <MenuItem value={3}>Marketing</MenuItem>
+                            <MenuItem value={4}>Economía</MenuItem>
+                            <MenuItem value={5}>Arte</MenuItem>
                         </Select>
                         <TextField
                             fullWidth
@@ -131,36 +185,72 @@ const CourseCreation = ({isUserLoggedIn}) => {
                 );
             case 2:
                 return (
-                    <div>
-                        <TextField
-                            style={{marginTop: "15%"}}
-                            label="Enlace del Material"
-                            value={materialLink}
-                            onChange={(e) => setMaterialLink(e.target.value)}
-                            fullWidth
-                            InputProps={{
-                                endAdornment: (
-                                    <InputAdornment position="end">
-                                        <Button variant="contained" color="primary" onClick={handleAddMaterial} startIcon={<AddIcon />}>
-                                            Agregar
-                                        </Button>
-                                    </InputAdornment>
-                                ),
-                            }}
-                        />
-                        <List>
-                            {materials.map((material, index) => (
-                                <ListItem key={index}>
-                                    <ListItemText primary={material} />
-                                    <ListItemSecondaryAction>
-                                        <IconButton edge="end" onClick={() => handleDeleteMaterial(index)}>
-                                            <DeleteIcon />
-                                        </IconButton>
-                                    </ListItemSecondaryAction>
-                                </ListItem>
-                            ))}
-                        </List>
-                    </div>
+                    <Container>
+                        <Button variant="contained" color="primary" onClick={handleAddSection} startIcon={<AddIcon />}>
+                            Agregar Sección
+                        </Button>
+                        {sections.map((section, sectionIndex) => (
+                            <Paper key={sectionIndex} style={{ marginTop: '20px', padding: '10px' }}>
+                                <TextField
+                                    label="Título de la Sección"
+                                    value={section.title}
+                                    onChange={(e) => {
+                                        const updatedSections = [...sections];
+                                        updatedSections[sectionIndex].title = e.target.value;
+                                        setSections(updatedSections);
+                                    }}
+                                    fullWidth
+                                />
+                                <Button variant="contained" color="secondary" onClick={() => handleAddVideo(sectionIndex)} style={{ marginTop: '10px' }}>
+                                    Agregar Video
+                                </Button>
+                                {section.videos.map((video, videoIndex) => (
+                                    <Grid container spacing={2} key={videoIndex} style={{ marginTop: '10px' }}>
+                                        <Grid item xs={12}>
+                                            <TextField
+                                                label="Título del Video"
+                                                value={video.title}
+                                                onChange={(e) => handleVideoInputChange(sectionIndex, videoIndex, 'title', e.target.value)}
+                                                fullWidth
+                                            />
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                            <TextField
+                                                label="Descripción del Video"
+                                                value={video.description}
+                                                onChange={(e) => handleVideoInputChange(sectionIndex, videoIndex, 'description', e.target.value)}
+                                                fullWidth
+                                            />
+                                        </Grid>
+                                        <Grid item xs={6}>
+                                            <TextField
+                                                label="Duración (en segundos)"
+                                                value={video.duration}
+                                                onChange={(e) => handleVideoInputChange(sectionIndex, videoIndex, 'duration', e.target.value)}
+                                                fullWidth
+                                            />
+                                        </Grid>
+                                        <Grid item xs={6}>
+                                            <TextField
+                                                label="Enlace del Video"
+                                                value={video.link}
+                                                onChange={(e) => handleVideoInputChange(sectionIndex, videoIndex, 'link', e.target.value)}
+                                                fullWidth
+                                            />
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                            <Button variant="contained" color="error" onClick={() => handleDeleteVideo(sectionIndex, videoIndex)}>
+                                                Eliminar Video
+                                            </Button>
+                                        </Grid>
+                                    </Grid>
+                                ))}
+                                <Button variant="contained" color="error" onClick={() => handleDeleteSection(sectionIndex)} style={{ marginTop: '10px' }}>
+                                    Eliminar Sección
+                                </Button>
+                            </Paper>
+                        ))}
+                    </Container>
                 );
             case 3:
                 return (
@@ -176,7 +266,73 @@ const CourseCreation = ({isUserLoggedIn}) => {
                 return (
                     <MultipleChoiceBuilder courseData={courseData} setCourseData={setCourseData}/>
                 );
-            // ... otros pasos del formulario
+            case 5:
+                return (
+                    <Paper elevation={0} style={{ padding: '20px' }}>
+                        {courseData && (
+                            <div>
+                                <Box style={{ padding: '20px' }}>
+                                    <Typography variant="h3">Imagen del curso</Typography>
+                                    <Grid item xs={12} sm style={{ paddingTop: '10px' }}>
+                                        <img
+                                            src={courseData.image}
+                                            alt="Foto del curso"
+                                            style={{ width: '30%', marginBottom: '20px' }}
+                                        />
+                                    </Grid>
+                                </Box>
+                                <Box style={{ padding: '20px' }}>
+                                    <Typography variant="h3">Título</Typography>
+                                    <Typography variant="body1" style={{ paddingTop: '10px' }}>{courseData.title}</Typography>
+                                </Box>
+                                <Box style={{ padding: '20px' }}>
+                                    <Typography variant="h3">Descripción</Typography>
+                                    <Typography variant="body1" style={{ paddingTop: '10px' }}>{courseData.description}</Typography>
+                                </Box>
+                                <Box style={{ padding: '20px' }}>
+                                    <Typography variant="h3">Categoría</Typography>
+                                    <Typography variant="body1" style={{ paddingTop: '10px' }}>{categoryNames[courseData.category]}</Typography>
+                                </Box>
+                                <Box style={{ padding: '20px' }}>
+                                    <Typography variant="h3">Secciones</Typography>
+                                    {sections.map((section, sectionIndex) => (
+                                        <Box key={sectionIndex} style={{ marginTop: '10px', padding: '10px' }}>
+                                            <Typography variant="h5">{`Sección ${sectionIndex + 1}: ${section.title}`}</Typography>
+                                            <List>
+                                                {section.videos.map((video, videoIndex) => (
+                                                    <ListItem key={videoIndex}>
+                                                        <ListItemText
+                                                            primary={`Video ${videoIndex + 1}: ${video.title}`}
+                                                            secondary={`Descripción: ${video.description}, Duración: ${video.duration} segundos, Enlace: ${video.link}`}
+                                                        />
+                                                    </ListItem>
+                                                ))}
+                                            </List>
+                                        </Box>
+                                    ))}
+                                </Box>
+                                <Box style={{ padding: '20px' }}>
+                                    <Typography variant="h3" style={{ paddingBottom: '10px' }}>Preguntas</Typography>
+                                    {JSON.parse(courseData.exam).map((q, index) => (
+                                        <Box key={index}>
+                                            <Typography variant="body1" style={{ paddingTop: '30px' }}>Pregunta: {q.question}</Typography>
+                                            <ul>
+                                                {q.options.map((opt, optIndex) => (
+                                                    <li key={optIndex}>{opt}</li>
+                                                ))}
+                                            </ul>
+                                            <Typography variant="body1">Respuesta correcta: {q.answer}</Typography>
+                                        </Box>
+                                    ))}
+                                </Box>
+                                <Box style={{ padding: '20px' }}>
+                                    <Typography variant="h3">Precio</Typography>
+                                    <Typography variant="body1" style={{ paddingTop: '10px' }}>${courseData.price}</Typography>
+                                </Box>
+                            </div>
+                        )}
+                    </Paper>
+                );
             default:
                 return 'Paso no válido';
         }

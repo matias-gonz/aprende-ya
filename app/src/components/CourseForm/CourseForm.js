@@ -86,11 +86,11 @@ function CourseForm({isUserLoggedIn}) {
             onChange={handleInputChange}
             style={{marginBottom: '16px'}}
           >
-            <MenuItem value={0}>Programación</MenuItem>
-            <MenuItem value={1}>Matemática</MenuItem>
-            <MenuItem value={2}>Marketing</MenuItem>
-            <MenuItem value={3}>Economía</MenuItem>
-            <MenuItem value={4}>Arte</MenuItem>
+            <MenuItem value={1}>Programación</MenuItem>
+            <MenuItem value={2}>Matemática</MenuItem>
+            <MenuItem value={3}>Marketing</MenuItem>
+            <MenuItem value={4}>Economía</MenuItem>
+            <MenuItem value={5}>Arte</MenuItem>
           </Select>
           <TextField
             fullWidth

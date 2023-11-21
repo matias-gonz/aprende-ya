@@ -8,7 +8,9 @@ from sqlmodel import Session
 from starlette import status
 from web3 import Web3
 
+from app.questions import QuestionCreate, QuestionRead,QuestionEdit
 from app.db.certificate_repository import CertificateRepository
+from app.db.questions_repository import QuestionRepository
 from app.db.user_course_relation_repository import UserCourseRelationRepository
 from app.course import CourseCreate, CourseRead
 from app.db.course_repository import CourseRepository
@@ -16,6 +18,7 @@ from app.db.database import create_db_and_tables, engine
 from app.db.exceptions import EmailTakenException, CourseNameTakenException
 from app.db.user_repository import UserRepository
 from app.user import UserRead, UserCreate
+from app.user_course_relation import UserCourseRelationCreate
 
 origins = [
     "http://localhost:3000",
@@ -147,6 +150,39 @@ async def get_course_information_by_user_id(course_id: int, user_id: int):
             detail=e.message,
         )
 
+@app.get("/courses/{user_id}", status_code=status.HTTP_200_OK)
+async def get_courses_by_user_id(user_id: int):
+    try:
+        with Session(engine) as session:
+            return UserCourseRelationRepository(session).get_courses_by_user_id(user_id)
+    except EmailTakenException as e:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail=e.message,
+        )
+
+@app.get("/course/{course_id}/reviews", status_code=status.HTTP_200_OK)
+async def get_courses_by_user_id(course_id: int):
+    try:
+        with Session(engine) as session:
+            return UserCourseRelationRepository(session).get_reviews_by_course_id(course_id)
+    except EmailTakenException as e:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail=e.message,
+        )
+
+@app.put("/course/{course_id}/user/{user_id}", status_code=status.HTTP_201_CREATED)
+async def edit_user(course_id: int, user_id: int, user_course_relation: UserCourseRelationCreate):
+    try:
+        with Session(engine) as session:
+            return UserCourseRelationRepository(session).update_user_course_relation(course_id, user_id, user_course_relation.dict(exclude_unset=False))
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail=e.message,
+        )
+
 
 @app.post("/course-purchases/{course_id}/users/{user_id}")
 def buy_course(course_id: int, user_id: int):
@@ -189,3 +225,33 @@ def create_certificate(user_id: int, course_id: int, email: str):
         tx_hash = w3.eth.send_raw_transaction(signed_tx.rawTransaction)
         print(f'Transaction hash: {tx_hash.hex()}')
         return CertificateRepository(session).create(user_id, course_id, str(tx_hash.hex()))
+
+
+@app.post("/questions/", response_model=QuestionRead)
+def create_question(question: QuestionCreate):
+    with Session(engine) as session:
+        return QuestionRepository(session).create(question)
+
+@app.get("/questions/{course_id}", response_model=List[QuestionRead])
+def get_questions_for_course(course_id: int):
+    with Session(engine) as session:
+
+        return QuestionRepository(session).get_all_for_course(course_id)
+
+# Endpoint to get a specific question by ID
+@app.get("/question/{question_id}", response_model=QuestionRead)
+def get_question(question_id: int):
+    with Session(engine) as session:
+        question = QuestionRepository(session).get_by_id(question_id)
+        if question is None:
+            raise HTTPException(status_code=404, detail="Question not found")
+        return question
+
+# Endpoint to add or update an answer to a question
+@app.post("/questions/{question_id}/answer", response_model=QuestionRead)
+def add_or_update_answer(question_id: int, answer: QuestionEdit):
+    with Session(engine) as session:
+        question = QuestionRepository(session).add_or_update_answer(question_id, answer.answer)
+        if question is None:
+            raise HTTPException(status_code=404, detail="Question not found")
+        return question
