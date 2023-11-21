@@ -130,6 +130,7 @@ const CourseDescription = ({isUserLoggedIn}) => {
         <Tab label="Curso"/>
         <Tab label="Reseñas"/>
         <Tab label="Foro"/>
+        {isEnrolled ? <Tab label="Examen"/> : null}
       </Tabs>
 
       <TabPanel value={tabValue} index={0}>
@@ -193,6 +194,9 @@ const CourseDescription = ({isUserLoggedIn}) => {
           <Forum courseId={course.id} isCourseCreator={course.owner_id === Cookies.get('user_id')}/>
         </Paper>
       </TabPanel>
+      <TabPanel value={tabValue} index={3}>
+        <CourseExam questions={course.exam}/>
+      </TabPanel>
 
       <Dialog
         open={buyDialog}
@@ -200,14 +204,6 @@ const CourseDescription = ({isUserLoggedIn}) => {
       >
         <DialogContent>
           <PaymentForm course_id={course.id} price={course.price}/>
-        </DialogContent>
-      </Dialog>
-      <Dialog
-        open={examDialog}
-        onClose={handleCloseExam}
-      >
-        <DialogContent>
-          <CourseExam questions={course.exam}/>
         </DialogContent>
       </Dialog>
       <Dialog

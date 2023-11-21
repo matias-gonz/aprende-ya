@@ -16,7 +16,7 @@ const MultipleChoiceBuilder = ({ courseData, setCourseData }) => {
     const [currentQuestion, setCurrentQuestion] = useState('');
     const [currentOptions, setCurrentOptions] = useState({ option1: '', option2: '', option3: ''});
     const [correctOption, setCorrectOption] = useState('');
-    const [exam, setExam] = useState([])
+    const [exam, setExam] = useState([]);
 
     const handleAddQuestion = () => {
         const newQuestion = {
