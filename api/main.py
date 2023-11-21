@@ -207,14 +207,17 @@ def get_certificates(user_id: int):
 
 
 @app.post("/certificates/{user_id}")
-def create_certificate(user_id: int, course_id: int, email: str):
+def create_certificate(user_id: int, course_id: int):
     with Session(engine) as session:
+        user = UserRepository(session).get_user_by_id(user_id)
+        course = CourseRepository(session).get_course_by_id(course_id)
+
         contract_address = '0x106205B74530Ea2BB08AdBD72B329014FC2f93ae'
         abi = [{'inputs': [], 'stateMutability': 'nonpayable', 'type': 'constructor'}, {'inputs': [{'internalType': 'string', 'name': '_course', 'type': 'string'}, {'internalType': 'string', 'name': '_userName', 'type': 'string'}, {'internalType': 'string', 'name': '_date', 'type': 'string'}, {'internalType': 'string', 'name': '_userId', 'type': 'string'}], 'name': 'addCertificate', 'outputs': [{'internalType': 'uint256', 'name': '', 'type': 'uint256'}], 'stateMutability': 'nonpayable', 'type': 'function'}, {'inputs': [], 'name': 'certificateCount', 'outputs': [{'internalType': 'uint256', 'name': '', 'type': 'uint256'}], 'stateMutability': 'view', 'type': 'function'}, {'inputs': [{'internalType': 'uint256', 'name': '', 'type': 'uint256'}], 'name': 'certificates', 'outputs': [{'internalType': 'string', 'name': 'course', 'type': 'string'}, {'internalType': 'string', 'name': 'userName', 'type': 'string'}, {'internalType': 'string', 'name': 'date', 'type': 'string'}, {'internalType': 'string', 'name': 'userId', 'type': 'string'}], 'stateMutability': 'view', 'type': 'function'}, {'inputs': [{'internalType': 'uint256', 'name': '_id', 'type': 'uint256'}], 'name': 'getCertificate', 'outputs': [{'internalType': 'string', 'name': '', 'type': 'string'}, {'internalType': 'string', 'name': '', 'type': 'string'}, {'internalType': 'string', 'name': '', 'type': 'string'}, {'internalType': 'string', 'name': '', 'type': 'string'}], 'stateMutability': 'view', 'type': 'function'}, {'inputs': [], 'name': 'owner', 'outputs': [{'internalType': 'address', 'name': '', 'type': 'address'}], 'stateMutability': 'view', 'type': 'function'}]
         w3 = Web3(Web3.HTTPProvider('https://sepolia.infura.io/v3/6503d426dbff47df8ff6259418f1404a'))
 
         contract = w3.eth.contract(address=contract_address, abi=abi)
-        tx = contract.functions.addCertificate(str(course_id), email, str(datetime.datetime.today()), str(user_id)).build_transaction(
+        tx = contract.functions.addCertificate(str(course.title), user.email, str(datetime.datetime.today()), str(user_id)).build_transaction(
             {
                 "gasPrice": w3.eth.gas_price,
                 "chainId": 11155111,

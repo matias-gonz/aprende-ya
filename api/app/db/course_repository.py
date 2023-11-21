@@ -2,8 +2,8 @@ from typing import List, Optional
 
 from sqlmodel import select, Session
 
-from app.db.models import Course
-from app.course import CourseRead, CourseCreate
+from app.db.models import Course, Section, Video
+from app.course import CourseRead, CourseCreate, SectionRead, SectionCreate, VideoRead, VideoCreate
 
 
 class CourseRepository:
@@ -17,11 +17,44 @@ class CourseRepository:
         return [course.to_read_model() for course in raw_courses]
 
     def create(self, course: CourseCreate, user_id: int) -> CourseRead:
-        course = Course.from_create_model(course, user_id)
-        self.session.add(course)
-        self.session.commit()
+        new_course = Course(
+            title=course.title,
+            category=course.category,
+            image=course.image,
+            price=course.price,
+            exam=course.exam,
+            description=course.description,
+            owner_id=user_id
+        )
 
-        return course.to_read_model()
+        self.session.add(new_course)
+        try:
+            self.session.commit()
+            # After committing, new_course and its children have IDs assigned by the database
+
+            # If sections are part of the course creation, handle them here
+            if course.sections:
+                for section_data in course.sections:
+                    section = Section(title=section_data.title, course_id=new_course.id)
+                    self.session.add(section)
+                    for video_data in section_data.videos:
+                        video = Video(
+                            title=video_data.title,
+                            description=video_data.description,
+                            duration=video_data.duration,
+                            link=video_data.link,
+                            section_id=section.id
+                        )
+                        section.videos.append(video)
+                    new_course.sections.append(section)
+
+            self.session.commit()  # Commit again to save sections and videos
+
+            return new_course.to_read_model()  # Now IDs should be available
+        except Exception as e:
+            self.session.rollback()
+            # Handle exception
+            raise e
 
     def get_by_title(self, title: str) -> Optional[CourseRead]:
         statement = select(Course).where(Course.title == title)

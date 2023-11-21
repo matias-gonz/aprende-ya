@@ -63,10 +63,6 @@ const CourseDescription = ({isUserLoggedIn}) => {
     window.location.reload();
   };
 
-  const handleCloseExam = () => {
-    setExamDialog(false);
-  }
-
   const handleAddToWishlist = () => {
     axios.post(`http://localhost:8000/wishlist`, {
       course_id: course.id,
@@ -217,7 +213,6 @@ const CourseDescription = ({isUserLoggedIn}) => {
             </Grid>
           </Grid>
         </Paper>
-
         <Paper
           style={{paddingTop: '80px'}}
           elevation={0}
@@ -228,7 +223,7 @@ const CourseDescription = ({isUserLoggedIn}) => {
             flexGrow: 1,
           }}
         >
-          {isEnrolled ? <CourseMaterialsList/> : null}
+          {isEnrolled ? <CourseMaterialsList courseSections={course.sections}/> : null}
         </Paper>
       </TabPanel>
       <TabPanel value={tabValue} index={1}>
@@ -241,7 +236,6 @@ const CourseDescription = ({isUserLoggedIn}) => {
         >
           <ReviewTab course_id={course.id}/>
         </Paper>
-
       </TabPanel>
       <TabPanel value={tabValue} index={2}>
         <Paper
@@ -258,7 +252,7 @@ const CourseDescription = ({isUserLoggedIn}) => {
         </Paper>
       </TabPanel>
       <TabPanel value={tabValue} index={3}>
-        <CourseExam questions={course.exam}/>
+        <CourseExam questions={course.exam} course_id={course_id}/>
       </TabPanel>
 
       <Dialog
