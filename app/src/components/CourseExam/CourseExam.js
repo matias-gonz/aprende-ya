@@ -7,6 +7,7 @@ import axios from "axios";
 const CourseExam = ({ questions, course_id }) => {
     const [score, setScore] = useState(0);
     const [certificado, setCertificado] = useState("");
+    const [loadingCertificate, setLoadingCertificate] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const parsedQuestions = JSON.parse(questions);
     const [selectedAnswers, setSelectedAnswers] = useState({});
@@ -27,6 +28,7 @@ const CourseExam = ({ questions, course_id }) => {
             }
         });
         setScore(s);
+        setLoadingCertificate(true);
         setShowModal(true);
 
         const user_id = Cookies.get('user_id');
@@ -35,15 +37,16 @@ const CourseExam = ({ questions, course_id }) => {
           .then(response => {
               console.log('Certificate generated:', response.data);
               setCertificado(response.data['hash']);
+              setLoadingCertificate(false);
           })
           .catch(error => {
               console.error('Error generating certificate:', error);
+              setLoadingCertificate(false);
           });
     };
 
     const handleCloseModal = () => {
         setShowModal(false);
-        window.location.reload();
     };
 
     return (
@@ -78,8 +81,11 @@ const CourseExam = ({ questions, course_id }) => {
                     <br />
                     <Typography variant={"h3"}>Tu puntuacion es: {score}/{parsedQuestions.length}</Typography>
                     <br />
-                    <Typography variant={"h3"}>Tu certificado es:</Typography>
-                    <p>{certificado}</p>
+                    <Typography variant={"h3"}>Certificado:</Typography>
+                    {loadingCertificate ?
+                      <Typography variant={"h3"} style={{fontSize: '1.5rem'}}>Generando certificado...</Typography> :
+                      <Typography variant={"h3"} style={{fontSize: '1.5rem'}}>{certificado}</Typography>
+                    }
                     <br />
                     <br />
                     <Button onClick={handleCloseModal}>Close</Button>
