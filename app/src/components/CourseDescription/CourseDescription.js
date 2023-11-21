@@ -62,10 +62,6 @@ const CourseDescription = ({isUserLoggedIn}) => {
     window.location.reload();
   };
 
-  const handleCloseExam = () => {
-    setExamDialog(false);
-  }
-
   const handleChange = (event, newValue) => {
     setTabValue(newValue);
   };
@@ -193,7 +189,7 @@ const CourseDescription = ({isUserLoggedIn}) => {
         </Paper>
       </TabPanel>
       <TabPanel value={tabValue} index={3}>
-        <CourseExam questions={course.exam}/>
+        <CourseExam questions={course.exam} course_id={course_id}/>
       </TabPanel>
 
       <Dialog

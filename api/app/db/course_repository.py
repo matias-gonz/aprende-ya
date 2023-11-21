@@ -67,3 +67,17 @@ class CourseRepository:
         course = self.session.exec(statement).first()
         if course:
             return course.to_read_model()
+    
+    def get_course_by_ids(self, course_ids) -> Optional[List[CourseRead]]:
+        try:
+            statement = select(Course).where(Course.id.in_(course_ids))
+            courses = self.session.execute(statement).all()
+
+            if courses:
+                return [course.to_read_model() for course in courses]
+            else:
+                return None  # O return [] dependiendo de tus necesidades
+
+        except Exception as e:
+            print(f"Error retrieving courses: {e}")
+            return None  # O lanza una excepción según tus necesidades

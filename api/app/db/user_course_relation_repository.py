@@ -54,7 +54,7 @@ class UserCourseRelationRepository:
         raw_user_course_relation = self.session.exec(statement)
 
         return [user_course_relation.to_read_model() for user_course_relation in raw_user_course_relation]
-
+    
     def get_reviews_by_course_id(self, course_id):
         statement = select(UserCourseRelation).where(UserCourseRelation.course_id == course_id)
         raw_user_course_relation = self.session.exec(statement)

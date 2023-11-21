@@ -106,8 +106,8 @@ class UserCourseRelation(SQLModel, table=True):
     user_id: int
     course_id: int
     is_finished: bool = False
-    review: Optional[str]
-    rating: Optional[int]
+    review: Optional[str] = None
+    rating: Optional[int] = None
 
     @classmethod
     def from_create_model(cls, user_id: int, course_id: int):
