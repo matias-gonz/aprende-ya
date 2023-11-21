@@ -17,6 +17,7 @@ class SectionCreate(BaseModel):
     videos: List[VideoCreate]
 
 class SectionRead(BaseModel):
+    id: str
     title: str
     videos: List[VideoRead]
 
