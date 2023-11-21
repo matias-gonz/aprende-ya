@@ -1,8 +1,108 @@
 .BuyButton {
-    font-size: 1rem;
-    border-radius: 2rem;
-    text-transform: none;
-    font-weight: bold;
-    background: linear-gradient(45deg, #843DF2, #B185F3);
-    margin-left: 1rem;
+  font-size: 1rem;
+  border-radius: 2rem;
+  text-transform: none;
+  font-weight: bold;
+  background: linear-gradient(45deg, #843DF2, #B185F3);
+  margin-left: 1rem;
+}
+
+/* Additional styles for improved consistency and responsiveness */
+.courseTitle {
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.courseSubtitle {
+  font-size: 1.5rem;
+  color: #666;
+}
+
+/* Responsive design adjustments */
+@media (max-width: 768px) {
+  .courseDetail {
+    padding: 10px;
+  }
+}
+
+.courseSection {
+  border: 1px solid #E0E0E0; /* Light grey border */
+  box-shadow: none; /* Remove Material UI's default shadow */
+  margin-bottom: 10px;
+}
+
+.sectionTitle {
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+.sectionDescription {
+  font-size: 0.875rem;
+  color: #303030; /* Matching dark text color */
+  margin-bottom: 1rem;
+}
+
+.sectionHeader {
+  background-color: #F9F9F9; /* Light grey background */
+  color: #303030; /* Dark text color for contrast */
+  /* height: auto; is not necessary as it's the default value */
+}
+
+/* ... other styles ... */
+
+.sectionDetails {
+  background-color: #FFFFFF; /* White background for the details */
+  display: flex;
+  flex-direction: column;
+  /* Make sure there's no fixed height set here */
+}
+
+
+/* Accordion styles */
+.videoAccordion {
+  border: 1px solid #e0e0e0; /* light grey border as seen in the screenshot */
+  box-shadow: none; /* no shadow for a flatter design */
+  margin-top: 10px;
+}
+
+.videoAccordion .MuiAccordionSummary-root {
+  background-color: #fafafa; /* a light grey background for the summary */
+  color: #333; /* darker text for better readability */
+  /* height: auto; is not necessary as it's the default value */
+}
+
+.videoAccordion .MuiAccordionDetails-root {
+  background-color: #fff; /* white background for the details */
+  padding: 16px;
+  /* Make sure there's no fixed height set here */
+}
+
+/* Typography styles */
+.videoTitle {
+  font-weight: 600; /* making title bold */
+  flex-grow: 1; /* ensuring title takes up the space it needs */
+}
+
+.videoDuration {
+  margin-left: 16px; /* spacing between the title and the duration */
+}
+
+.videoDescription {
+  color: #666; /* a lighter shade for the description */
+  margin-bottom: 16px; /* spacing before the video */
+}
+
+/* Video container styles */
+
+.videoContainer {
+  width: 100%; /* Full width of the container */
+  /* max-width: 440px; may not be necessary unless you want to limit the width */
+  margin: auto; /* Centers the video in the container */
+  /* The aspect ratio box is no longer needed here if you use aspect-ratio property */
+}
+
+.videoContainer iframe {
+  width: 100%; /* Full width of the container */
+  /* height: auto; may not be necessary with aspect-ratio property */
+  aspect-ratio: 16 / 9; /* Maintain aspect ratio */
 }
