@@ -4,17 +4,16 @@ from sqlmodel import select, Session
 
 from app.db.models import UserCourseRelation
 
-from app.db.models import Course
-
+from app.db.models import Course, Section
 
 class CourseWithRelation:
-    def __init__(self, id: int, title: str, description: str, category: int, content: str, image: str, price: int,
+    def __init__(self, id: int, title: str, description: str, category: int, sections: List[Section], image: str, price: int,
                  owner_id: int, exam: str, is_finished: Optional[bool] = None):
         self.id = id
         self.title = title
         self.description = description
         self.category = category
-        self.content = content
+        self.sections = sections
         self.image = image
         self.price = price
         self.owner_id = owner_id

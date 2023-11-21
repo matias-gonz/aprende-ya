@@ -150,7 +150,6 @@ const CourseDescription = ({isUserLoggedIn}) => {
             </Grid>
           </Grid>
         </Paper>
-
         <Paper
           style={{paddingTop: '80px'}}
           elevation={0}
@@ -161,7 +160,7 @@ const CourseDescription = ({isUserLoggedIn}) => {
             flexGrow: 1,
           }}
         >
-          {isEnrolled ? <CourseMaterialsList/> : null}
+          {isEnrolled ? <CourseMaterialsList courseSections={course.sections}/> : null}
         </Paper>
       </TabPanel>
       <TabPanel value={tabValue} index={1}>
@@ -174,7 +173,6 @@ const CourseDescription = ({isUserLoggedIn}) => {
         >
           <ReviewTab course_id={course.id}/>
         </Paper>
-
       </TabPanel>
       <TabPanel value={tabValue} index={2}>
         <Paper

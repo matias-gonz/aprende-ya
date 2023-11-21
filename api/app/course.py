@@ -1,20 +1,38 @@
+from typing import Optional, List
+
 from pydantic import BaseModel, Field
 
 
-class CourseBase(BaseModel):
-    title: str = Field(description="Course title")
-    description: str = Field(description="Course description")
-    category: int = Field(description="Course category")
-    image: str = Field(description="Course image")
-    price: int = Field(description="Course price")
-    exam: str = Field(description="Exam details as JSON")
+class VideoCreate(BaseModel):
+    title: str
+    description: str
+    duration: int
+    link: str
 
+class VideoRead(VideoCreate):
+    id: int
+
+class SectionCreate(BaseModel):
+    title: str
+    videos: List[VideoCreate]
+
+class SectionRead(BaseModel):
+    title: str
+    videos: List[VideoRead]
+
+class CourseBase(BaseModel):
+    title: str
+    description: str
+    category: int
+    image: str
+    price: int
+    exam: str
 
 class CourseCreate(CourseBase):
-    pass
-
+    sections: List[SectionCreate]
 
 class CourseRead(CourseBase):
-    id: int = Field(description="Course ID")
-    owner_id: str = Field(description="Owner id")
-    content: str = Field(description="Course content")
+    id: int
+    owner_id: str
+    sections: List[SectionRead]
+
