@@ -88,7 +88,7 @@ const MultipleChoiceBuilder = ({ courseData, setCourseData }) => {
             </Container>
 
             <Box>
-                {questions.map((q, index) => (
+                {JSON.parse(courseData.exam).map((q, index) => (
                     <div key={index}>
                         <h3>{q.question}</h3>
                         <ul>
