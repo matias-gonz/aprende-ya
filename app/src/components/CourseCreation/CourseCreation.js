@@ -9,7 +9,7 @@ import {
     Container,
     Paper,
     ListItemText,
-    ListItem, List, IconButton, ListItemSecondaryAction, InputAdornment, Select, MenuItem
+    ListItem, List, IconButton, ListItemSecondaryAction, InputAdornment, Select, MenuItem, Grid, Box
 } from '@mui/material';
 import axios from "axios";
 import NavBar from "../NavBar/NavBar";
@@ -18,7 +18,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import MultipleChoiceBuilder from "../MultipleChoiceBuilder/MultipleChoiceBuilder";
 
-const steps = ['Título', 'Descripción', 'Contenido', 'Imagen', 'Examen'];
+const steps = ['Título', 'Descripción', 'Contenido', 'Imagen', 'Examen', 'Revisión'];
 
 const CourseCreation = ({isUserLoggedIn}) => {
     const navigate = useNavigate();
@@ -27,9 +27,9 @@ const CourseCreation = ({isUserLoggedIn}) => {
     const [courseData, setCourseData] = useState({
         title: '',
         description: '',
-        category: 0,
+        category: 1,
         image: '',
-        exam: '',
+        exam: '[]',
         price: 0
     });
     const [materialLink, setMaterialLink] = useState('');
@@ -82,6 +82,8 @@ const CourseCreation = ({isUserLoggedIn}) => {
         setCourseData({...courseData, [name]: value});
     };
 
+    const categoryNames = ['0', 'Programación', 'Matemática', 'Marketing', 'Economía', 'Arte'];
+
     const getStepContent = (stepIndex) => {
         switch (stepIndex) {
             case 0:
@@ -113,11 +115,11 @@ const CourseCreation = ({isUserLoggedIn}) => {
                             onChange={handleInputChange}
                             style={{marginTop: '20px'}}
                         >
-                            <MenuItem value={0}>Programación</MenuItem>
-                            <MenuItem value={1}>Matemática</MenuItem>
-                            <MenuItem value={2}>Marketing</MenuItem>
-                            <MenuItem value={3}>Economía</MenuItem>
-                            <MenuItem value={4}>Arte</MenuItem>
+                            <MenuItem value={1}>Programación</MenuItem>
+                            <MenuItem value={2}>Matemática</MenuItem>
+                            <MenuItem value={3}>Marketing</MenuItem>
+                            <MenuItem value={4}>Economía</MenuItem>
+                            <MenuItem value={5}>Arte</MenuItem>
                         </Select>
                         <TextField
                             fullWidth
@@ -176,7 +178,59 @@ const CourseCreation = ({isUserLoggedIn}) => {
                 return (
                     <MultipleChoiceBuilder courseData={courseData} setCourseData={setCourseData}/>
                 );
-            // ... otros pasos del formulario
+            case 5:
+                return (
+                    <Paper elevation={0} style={{ padding: '20px' }}>
+                        {courseData && (
+                            <div>
+                                <Box style={{ padding: '20px' }}>
+                                    <Typography variant="h3">Imagen del curso</Typography>
+                                    <Grid item xs={12} sm style={{ paddingTop: '10px' }}>
+                                        <img
+                                            src={courseData.image}
+                                            alt="Foto del curso"
+                                            style={{ width: '30%', marginBottom: '20px' }}
+                                        />
+                                    </Grid>
+                                </Box>
+                                <Box style={{ padding: '20px' }}>
+                                    <Typography variant="h3">Título</Typography>
+                                    <Typography variant="body1" style={{ paddingTop: '10px' }}>{courseData.title}</Typography>
+                                </Box>
+                                <Box style={{ padding: '20px' }}>
+                                    <Typography variant="h3">Descripción</Typography>
+                                    <Typography variant="body1" style={{ paddingTop: '10px' }}>{courseData.description}</Typography>
+                                </Box>
+                                <Box style={{ padding: '20px' }}>
+                                    <Typography variant="h3">Categoría</Typography>
+                                    <Typography variant="body1" style={{ paddingTop: '10px' }}>{categoryNames[courseData.category]}</Typography>
+                                </Box>
+                                <Box style={{ padding: '20px' }}>
+                                    <Typography variant="h3">Materiales</Typography>
+                                    <Typography variant="body1" style={{ paddingTop: '10px' }}></Typography>
+                                </Box>
+                                <Box style={{ padding: '20px' }}>
+                                    <Typography variant="h3" style={{ paddingBottom: '10px' }}>Preguntas</Typography>
+                                    {JSON.parse(courseData.exam).map((q, index) => (
+                                        <Box key={index}>
+                                            <Typography variant="body1" style={{ paddingTop: '30px' }}>Pregunta: {q.question}</Typography>
+                                            <ul>
+                                                {q.options.map((opt, optIndex) => (
+                                                    <li key={optIndex}>{opt}</li>
+                                                ))}
+                                            </ul>
+                                            <Typography variant="body1">Respuesta correcta: {q.answer}</Typography>
+                                        </Box>
+                                    ))}
+                                </Box>
+                                <Box style={{ padding: '20px' }}>
+                                    <Typography variant="h3">Precio</Typography>
+                                    <Typography variant="body1" style={{ paddingTop: '10px' }}>${courseData.price}</Typography>
+                                </Box>
+                            </div>
+                        )}
+                    </Paper>
+                );
             default:
                 return 'Paso no válido';
         }
