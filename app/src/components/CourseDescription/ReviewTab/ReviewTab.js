@@ -27,6 +27,9 @@ const ReviewsTab = ({ course_id }) => {
             const reviews = courseReviews.map(relation => {
                 const user = users.find(user => user.id === relation.user_id);
 
+                if (!relation.review) {
+                    return null
+                }
                 return {
                     name: user ? user.name : 'Usuario no encontrado',
                     comment: relation.review || 'Sin comentario',
@@ -46,6 +49,7 @@ const ReviewsTab = ({ course_id }) => {
             <Divider />
             <List>
                 {reviews.map((review) => (
+                    review ?
                     <React.Fragment key={review.id}>
                         <ListItem alignItems="flex-start">
                             <ListItemText
@@ -67,7 +71,7 @@ const ReviewsTab = ({ course_id }) => {
                             />
                         </ListItem>
                         <Divider variant="inset" component="li" />
-                    </React.Fragment>
+                    </React.Fragment> : null
                 ))}
             </List>
         </Box>
